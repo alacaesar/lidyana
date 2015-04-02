@@ -468,7 +468,11 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 				if( dir == 'bottom' || dir == 'rigth' ) cr = Math.round( ( 1 - rate ) * maxCount );
 				else if( dir == 'top' || dir == 'left' ) cr = Math.round( rate * maxCount );
 				drawCanvas( cr ); 
-
+					
+				//
+				if( callback != undefined && rate == 0 ) 	
+					callback( 'go' );
+					
 			});
 					
 			drawCanvas( 0 );
@@ -509,20 +513,39 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 	
 	function Section( o, callback ){
 		
-		var video = $('#videoPlayer'), videoFrame, frmRate = 30, totalFrame = 0;
+		var video = $('#videoPlayer'), videoFrame, frmRate = 30, totalFrame = 0, controlPoint = { 'begin': 760, 'end': 879 }, preview = true;
 			
 		function init(){
 			// Video
-			video[0].addEventListener('loadedmetadata', function(e){ totalFrame = Math.floor( video[0].duration.toFixed( 5 ) * frmRate ); });
-			videoFrame = VideoFrame({ id: 'videoPlayer', frameRate: frmRate, callback: function(){ if( preview ) previewVideo( videoFrame.get() ); } });
-			videoFrame.listen('frame');
+			videoFrame = VideoFrame({ id: 'videoPlayer', frameRate: frmRate, callback: function(){ progressVideo( videoFrame.get() ); } });
+			videoFrame.listen('frame');		
+			video[ 0 ].addEventListener('loadedmetadata', function(e){ totalFrame = Math.floor( video[ 0 ].duration.toFixed( 5 ) * frmRate ); video[ 0 ].play(); });
+			video.bind('click', function(){
+				if( preview ){
+					preview = false;
+					video[0].pause();
+				}else{
+					preview = true;
+					video[0].play();
+				}
+			});
 			
 			// Scrup
-			new Scrup();
+			new Scrup({}, function( k ){
+				if( k == 'go' ){
+					video[ 0 ].play();
+					$('.scene').removeClass('scrup');
+				}
+			});
 		}
 		
-		function previewVideo( currentFrame ){
-			console.log( currentFrame );
+		function progressVideo( currentFrame ){
+			if( controlPoint['begin'] == currentFrame ){
+				video[ 0 ].pause();
+				$('.scene').addClass('scrup');
+			}
+			
+			console.log( currentFrame / totalFrame );
 		}
 		
 		init();
