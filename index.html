@@ -2,32 +2,44 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>360 Image Viewer</title>
+<title>NIKE</title>
 <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=0.7", user-scalable="no">
 <link rel="stylesheet" href="css/reset.css" type="text/css">
 <link rel="stylesheet" href="css/style.css" type="text/css">
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" type="text/css">
 <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/data.js"></script>
 <script type="text/javascript" src="js/plugins.js"></script>
 </head>
 <body>
-
-
 <div class="wrapper">
   <div class="preloading"></div>
-  <div class="scene">   
+  
+  <div class="scene">
+    
+    <video id="videoPlayer">
+      <source src="demo-video/video.mp4" type="video/mp4" poster=""></source>
+    </video>
+    
     <div class="hdImage"></div>
-    <canvas id="Canvas" width="960" height="450"></canvas>
+    <canvas id="Canvas" width="640" height="360"></canvas>
+  </div>
+  <!-- -->
+  
+  <div class="timeline">
+    <div class="controller">
+      <div class="inside">
+        <div class="pointers"></div>
+        <div class="progress"></div>
+      </div>
+    </div>
   </div>
 </div>
-
 <script type="text/javascript">
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, container, el = $('.wrapper'), preloading = $('.preloading'), imgW = 960, imgH = 450, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1;
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, container, el = $('.wrapper'), preloading = $('.preloading'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -51,70 +63,22 @@ var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = pa
 		createjs.Ticker.removeEventListener('tick', tick);
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// DATA
-
-var data = {
-	'women_power_snatch':	{
-		'small': 'images/power_snatch/small/LB_Training_W01.',
-		'medium': 'images/power_snatch/medium/LB_Training_W01.',
-		'large': 'images/power_snatch/large/LB_Training_W01.',
-		'step': 4,
-		'stepMobile': 8,
-		'first': 1,
-		'last': 150,
-		'controller': 'type1'
-	}
-};
-
-var controllerData = {
-	'type1':
-	{
-		'x': 150,
-		'y': 100,
-		'direction': 'top',
-		'controlPoint': .6,
-		'path':
-		{
-			'd': [ 19,19.5,21.875532150268555,21.301651000976562,24.660114288330078,23.241741180419922,30.03569793701172,27.38509750366211,32.639320373535156,29.56220245361328,37.694061279296875,34.092018127441406,40.148681640625,36.43588638305664,42.5567741394043,38.82754135131836,42.5567741394043,38.82754135131836,44.91938018798828,41.26414108276367,49.51146697998047,46.26264953613281,51.74248504638672,48.82029342651367,53.930965423583984,51.41443634033203,56.077552795410156,54.04335021972656,58.18280792236328,56.705482482910156,60.2470588684082,59.3995246887207,62.27106475830078,62.12394714355469,66.19941711425781,67.65946960449219,68.1048583984375,70.46809387207031,69.9716796875,73.30253601074219,71.80011749267578,76.1618881225586,73.59095764160156,79.044921875,75.34418487548828,81.95101165771484,77.06058502197266,84.8790054321289,80.3839111328125,90.79763793945312,80.3839111328125,90.79763793945312,81.99163055419922,93.78668212890625,83.56396484375,96.79449462890625,86.60368347167969,102.86369323730469,86.60368347167969,102.86369323730469,89.50666046142578,108.99948120117188,92.27562713623047,115.1969223022461,94.91366577148438,121.45120239257812,96.18470764160156,124.59821319580078,97.4241714477539,127.75777435302734,98.63224029541016,130.92950439453125,100.95643615722656,137.30709838867188,100.95643615722656,137.30709838867188,103.160400390625,143.72726440429688,104.21820831298828,146.9521942138672,105.2470932006836,150.18646240234375,106.24706268310547,153.42982482910156,108.16282653808594,159.94178771972656,109.07927703857422,163.209716796875,109.9682388305664,166.48519897460938,111.66621398925781,173.05735778808594,111.66621398925781,173.05735778808594,112.47581481933594,176.35336303710938,113.25929260253906,179.6556854248047,114.0176010131836,182.96388244628906,114.75019836425781,186.27786254882812,115.45819854736328,189.59716796875,116.1417007446289,192.921630859375,116.80061340332031,196.2510528564453,117.43573760986328,199.58509826660156,118.04733276367188,202.92355346679688,118.63561248779297,206.26617431640625,119.20055389404297,209.61282348632812,119.74280548095703,212.96319580078125,120.26264190673828,216.31716918945312,120.76031494140625,219.67445373535156,121.2361068725586,223.03492736816406,121.69029998779297,226.39840698242188,122.12313842773438,229.76467895507812,122.12313842773438,229.76467895507812,122.53492736816406,233.13360595703125,122.92591857910156,236.5050048828125,123.64665985107422,243.2545928955078,123.97697448730469,246.6325225830078,124.57796478271484,253.3938446044922,124.57796478271484,253.3938446044922,125.10225677490234,260.1615295410156,125.33609771728516,263.5474548339844,125.74809265136719,270.32293701171875,125.9271240234375,273.7121887207031,126.0877914428711,277.1023864746094,126.23115539550781,280.4933776855469,126.3570785522461,283.885009765625,126.46556091308594,287.2772521972656,126.55750274658203,290.6700134277344,126.69047546386719,297.4566955566406],
-			'color': '#FFFFFF',
-			'style': '2',
-			'dash': { 'segment': [ 18, 8 ], 'offset': 8 }
-		},
-		'manifest':[
-			{ 'id': 'start', 'src': 'frontend/drgPoint.png' },
-			{ 'id': 'end', 'src': 'frontend/drgPoint.png' },
-			{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png' },
-			{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png' }
-		]
-	},
-	
-	'type2':
-	{
-		'x': 275,
-		'y': 100,
-		'direction': 'bottom',
-		'controlPoint': .6,
-		'path':
-		{
-			'd': [ 19,19.5,21.875532150268555,21.301651000976562,24.660114288330078,23.241741180419922,30.03569793701172,27.38509750366211,32.639320373535156,29.56220245361328,37.694061279296875,34.092018127441406,40.148681640625,36.43588638305664,42.5567741394043,38.82754135131836,42.5567741394043,38.82754135131836,44.91938018798828,41.26414108276367,49.51146697998047,46.26264953613281,51.74248504638672,48.82029342651367,53.930965423583984,51.41443634033203,56.077552795410156,54.04335021972656,58.18280792236328,56.705482482910156,60.2470588684082,59.3995246887207,62.27106475830078,62.12394714355469,66.19941711425781,67.65946960449219,68.1048583984375,70.46809387207031,69.9716796875,73.30253601074219,71.80011749267578,76.1618881225586,73.59095764160156,79.044921875,75.34418487548828,81.95101165771484,77.06058502197266,84.8790054321289,80.3839111328125,90.79763793945312,80.3839111328125,90.79763793945312,81.99163055419922,93.78668212890625,83.56396484375,96.79449462890625,86.60368347167969,102.86369323730469,86.60368347167969,102.86369323730469,89.50666046142578,108.99948120117188,92.27562713623047,115.1969223022461,94.91366577148438,121.45120239257812,96.18470764160156,124.59821319580078,97.4241714477539,127.75777435302734,98.63224029541016,130.92950439453125,100.95643615722656,137.30709838867188,100.95643615722656,137.30709838867188,103.160400390625,143.72726440429688,104.21820831298828,146.9521942138672,105.2470932006836,150.18646240234375,106.24706268310547,153.42982482910156,108.16282653808594,159.94178771972656,109.07927703857422,163.209716796875,109.9682388305664,166.48519897460938,111.66621398925781,173.05735778808594,111.66621398925781,173.05735778808594,112.47581481933594,176.35336303710938,113.25929260253906,179.6556854248047,114.0176010131836,182.96388244628906,114.75019836425781,186.27786254882812,115.45819854736328,189.59716796875,116.1417007446289,192.921630859375,116.80061340332031,196.2510528564453,117.43573760986328,199.58509826660156,118.04733276367188,202.92355346679688,118.63561248779297,206.26617431640625,119.20055389404297,209.61282348632812,119.74280548095703,212.96319580078125,120.26264190673828,216.31716918945312,120.76031494140625,219.67445373535156,121.2361068725586,223.03492736816406,121.69029998779297,226.39840698242188,122.12313842773438,229.76467895507812,122.12313842773438,229.76467895507812,122.53492736816406,233.13360595703125,122.92591857910156,236.5050048828125,123.64665985107422,243.2545928955078,123.97697448730469,246.6325225830078,124.57796478271484,253.3938446044922,124.57796478271484,253.3938446044922,125.10225677490234,260.1615295410156,125.33609771728516,263.5474548339844,125.74809265136719,270.32293701171875,125.9271240234375,273.7121887207031,126.0877914428711,277.1023864746094,126.23115539550781,280.4933776855469,126.3570785522461,283.885009765625,126.46556091308594,287.2772521972656,126.55750274658203,290.6700134277344,126.69047546386719,297.4566955566406],
-			'color': '#FFFFFF',
-			'style': '2',
-			'dash': { 'segment': [ 18, 8 ], 'offset': 8 }
-		},
-		'manifest':[
-			{ 'id': 'start', 'src': 'frontend/drgPoint.png' },
-			{ 'id': 'end', 'src': 'frontend/drgPoint.png' },
-			{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png' },
-			{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png' }
-		]
-	}
-};
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// MATH FUNC.
 var MATH = {
+	
+	keyCount : function(o) {
+        if( typeof o == 'object' ){
+            var i, count = 0;
+            for( i in o ) {
+                if( o.hasOwnProperty( i ) ){
+                    count++;
+                }
+            }
+            return count;
+        } else {
+            return false;
+        }
+    },
 	
 	getDistance: function( x1, y1, x2, y2 ){
 		var dx = x2 - x1, dy = y2 - y1;
@@ -191,24 +155,8 @@ var MATH = {
 };
 createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
     return this.append( new createjs.Graphics.StrokeDash( segments, offset ) );
-}
+};
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// GLOBAL FUNC.
-$.extend({
-    keyCount : function(o) {
-        if( typeof o == 'object' ){
-            var i, count = 0;
-            for( i in o ) {
-                if( o.hasOwnProperty( i ) ){
-                    count++;
-                }
-            }
-            return count;
-        } else {
-            return false;
-        }
-    }
-}); 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PRELOADER
 (function(window){
@@ -231,7 +179,10 @@ $.extend({
 		
 		function handleComplete( e ){
 			callbackDetect( {'type': 'complete', 'value': e['target'] } );
-			if( preload != null ) preload.close();
+			if( preload != null ){
+				preload.close();
+				preload = null;
+			}
 		}
 		
 		function callbackDetect( obj ){
@@ -459,7 +410,7 @@ $.extend({
 
 (function(window){
 	
-	function Canvas( o, callback ){
+	function Scrup( o, callback ){
 		
 		var con = new createjs.Container(), _loadItemsById, _loadedResults, maxCount = 0;
 		
@@ -469,23 +420,26 @@ $.extend({
 			
 			var obj = data['women_power_snatch'], sml = obj['small'], md = obj['medium'], lrg = obj['large'], stp = isMobile ? obj['stepMobile'] : obj['step'], first = obj['first'], last = obj['last'], counter = 0, manifest = [];
 			for( var i = first; i <= last; ++i ){
-				if( i % stp == 1 ){
-					
-					var imgName = '', n = i.toString().length, o = {};
-					if( n == 1 ) imgName = '000';
-					else if( n == 2 ) imgName = '00';
-					else if( n == 3 ) imgName = '0';
-					imgName = imgName + i + '.jpg';
-					
-					o['id'] = counter;
-					o['src'] = md + imgName;
-					o['paths'] = { 'small': sml + imgName, 'medium': md + imgName, 'large': lrg + imgName };
-					manifest.push( o );
-					
-					counter++;
-				}
+				
+				if( stp > 1 )
+					if( i % stp != 1 ) continue; 
+				
+				var imgName = '', n = i.toString().length, o = {};
+				if( n == 1 ) imgName = '0000';
+				else if( n == 2 ) imgName = '000';
+				else if( n == 3 ) imgName = '00';
+				imgName = imgName + i + '.jpg';
+				
+				o['id'] = counter;
+				o['src'] = md + imgName;
+				o['paths'] = { 'small': sml + imgName, 'medium': md + imgName, 'large': lrg + imgName };
+
+				manifest.push( o );
+				
+				counter++;
+		
 			}
-			
+
 			new Preloader( manifest, function( k ){ 
 				if( k['type'] == 'progress' ) progress( k['value'] );
 				else if( k['type'] == 'complete' ) complete( k['value'] ); 
@@ -505,7 +459,7 @@ $.extend({
 	
 			_loadItemsById = e['_loadItemsById'];
 			_loadedResults = e['_loadedResults'];
-			maxCount = $.keyCount( _loadItemsById ) - 1;
+			maxCount = MATH.keyCount( _loadItemsById ) - 1;
 			
 			
 			new Controller( controllerData['type2'], function( o ){
@@ -533,6 +487,43 @@ $.extend({
 			update = true;
 		}
 	
+		init();
+					
+		// PUBLIC FUNC.
+		this.adjust = function(){
+		
+		};
+		this.destroy = function(){
+		
+		};
+	};
+	
+	window.Scrup = Scrup;
+	
+})(window);
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SECTION
+
+(function(window){
+	
+	function Section( o, callback ){
+		
+		var video = $('#videoPlayer'), videoFrame, frmRate = 30, totalFrame = 0;
+			
+		function init(){
+			// Video
+			video[0].addEventListener('loadedmetadata', function(e){ totalFrame = Math.floor( video[0].duration.toFixed( 5 ) * frmRate ); });
+			videoFrame = VideoFrame({ id: 'videoPlayer', frameRate: frmRate, callback: function(){ if( preview ) previewVideo( videoFrame.get() ); } });
+			videoFrame.listen('frame');
+			
+			// Scrup
+			new Scrup();
+		}
+		
+		function previewVideo( currentFrame ){
+			console.log( currentFrame );
+		}
 		
 		init();
 					
@@ -545,14 +536,15 @@ $.extend({
 		};
 	};
 	
-	window.Canvas = Canvas;
+	window.Section = Section;
 	
 })(window);
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-new Canvas();
+new Section();	
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// RESIZE
@@ -572,30 +564,13 @@ function sceneResize(){
 	
 	/* ORANTI 1 */
 	if ( wt / ht >= ratio ){
-		
 		wRatio = wt;
 		hRatio = wt / ratio;
-		
 	}else{
-		
 		wRatio = ht * ratio;
 		hRatio = ht;
-		
 	}
 
-	canvas.attr( 'width', wt ).attr( 'height', ht );
-	
-	//container.setBounds ( Math.round( ( wt - wRatio ) * .5 ),  Math.round( ( ht - hRatio ) * .5 ),  wRatio,  hRatio );
-			
-	container.x = Math.round( ( wt - wRatio ) * .5 );
-	container.y = Math.round( ( ht - hRatio ) * .5 );
-	container.scaleX = wRatio / imgW;
-	container.scaleY = hRatio / imgH;
-	
-	
-	
-	
-	
 	/* ORANTI 2 
 	if( wt / ht >= ratio ){
 		wRatio = ht * ratio;
@@ -603,19 +578,14 @@ function sceneResize(){
 	}else{
 		wRatio = wt;
 		hRatio = wt / ratio;
-	}
-	canvas.css({ 'width': Math.round( wRatio ), 'height': Math.round( hRatio ), 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ) });
-	*/
+	}*/
+
+	canvas.attr( 'width', wt ).attr( 'height', ht );
 	
-	/* ORANTI 3
-	if ( wt / ht >= ratio ){
-		wRatio = wt;
-		hRatio = wt / ratio;
-	}else{
-		wRatio = ht * ratio;
-		hRatio = ht;
-	}
-	canvas.css({ 'width': Math.round( wRatio ), 'height': Math.round( hRatio ), 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ) });
+	/*container.x = Math.round( ( wt - wRatio ) * .5 );
+	container.y = Math.round( ( ht - hRatio ) * .5 );
+	container.scaleX = wRatio / imgW;
+	container.scaleY = hRatio / imgH;
 	*/
 
 	scene.update();

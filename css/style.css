@@ -1,5 +1,5 @@
 /* GLOBAL */
-*{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:arial;font-size:13px;color:#000;font-weight:400;font-style:normal;text-align:left;line-height:1;margin:0;padding:0;border:none;outline:0;vertical-align:baseline;text-decoration:none;list-style:none}
+.wrapper *{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:arial;font-size:13px;color:#000;font-weight:400;font-style:normal;text-align:left;line-height:1;margin:0;padding:0;border:none;outline:0;vertical-align:baseline;text-decoration:none;list-style:none}
 ::-moz-selection{ background:#FF0; color:#000; text-shadow:none }
 ::selection{ background:#FF0; color:#000; text-shadow:none }
 .clearfix:after,.clearfix:before{display:table;content:" ";font-size:0;height:0}
@@ -9,24 +9,17 @@
 
 body, html{ width:100%; height:100%; overflow:hidden; background:#000; }
 
-/* */
+/* SETUP */
 .wrapper{ width:100%; height:100%; position:relative; }
 .wrapper .scene{ width:100%; height:100%; }
-.wrapper .scene canvas, .wrapper .scene .hdImage{ position:absolute; top:0; left:0; z-index:1; }
+.wrapper .scene canvas, .wrapper .scene .hdImage{ position:fixed; top:0; left:0; z-index:1; }
 .wrapper .scene .hdImage{ pointer-events: none; width:100%; height:100%; background-size:cover; background-position:center; z-index:2; }
 
-/* */ 
+/* PRELOADING */ 
 .wrapper .preloading{ background:red; width:0; height:5px; transition: width 0.5s ease; position:absolute; top:0; left:0; }
 .wrapper .preloading.completed{ transition: opacity 0.5s ease; opacity:0;  }
 
-/* */
-.draggableAre{ position:absolute; z-index:3; left:20%; }
-.draggableAre .inside{ position:relative; width:100%; height:100%; }
-.draggableAre.type1{ width:146px; height:347px; }
-.draggableAre.type1 .endDiv{ position:absolute; top:0; left:0; width:38px; height:38px; opacity:.5; background:url(../frontend/drgPoint.png) no-repeat; }
-.draggableAre.type1 .startDiv{ position:absolute; bottom:0; right:0; width:38px; height:38px; background:url(../frontend/drgPoint.png) no-repeat; }
-.draggableAre.type1 .motionDiv{ position:absolute; bottom:0; right:0; width:40px; height:40px; background:url(../frontend/drgDbArw.png) no-repeat; }
-.draggableAre.type1.drag .motionDiv{ background:url(../frontend/drgDbArw.png) no-repeat; }
-.draggableAre.type1 .draggableDiv{ position:absolute; bottom:0; right:0; width:38px; height:38px; opacity:.5; z-index:3; cursor:pointer; }
-.draggableAre.type1 .draggableDiv::after{ content:''; position:absolute; width:70px; height:70px; left:-16px; top:-16px; opacity:.3; }
-.draggableAre.type1 .path, .draggableAre.type1 .path svg{ width:100%; height:100%; }
+/* TIMELINE */
+.wrapper .timeline{ width:100%; position:fixed; left:0; bottom:0; z-index:3; }
+.wrapper .timeline .controller{ width:100%; padding:0 10%; position:relative; }
+.wrapper .timeline .controller .inside{ background:red; width:100%; height:25px; position:relative; }
