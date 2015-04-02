@@ -1,0 +1,655 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>360 Image Viewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=0.7", user-scalable="no">
+<link rel="stylesheet" href="css/reset.css" type="text/css">
+<link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" type="text/css">
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/plugins.js"></script>
+</head>
+<body>
+
+
+<div class="wrapper">
+  <div class="preloading"></div>
+  <div class="scene">   
+    <div class="hdImage"></div>
+    <canvas id="Canvas" width="960" height="450"></canvas>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
+
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, container, el = $('.wrapper'), preloading = $('.preloading'), imgW = 960, imgH = 450, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1;
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
+
+	scene = new createjs.Stage('Canvas');
+	container = new createjs.Container();
+	scene.addChild( container );
+	createjs.Ticker.setFPS( 30 );
+	createjs.Touch.enable( scene );
+	scene.enableMouseOver(10);
+	scene.mouseMoveOutside = true;
+	
+	
+	createjs.Ticker.addEventListener('tick', tick);
+	function tick( event ){
+		if( update ){
+			update = false;
+			scene.update( event );
+		}
+	}
+	function stop(){
+		createjs.Ticker.removeEventListener('tick', tick);
+	}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// DATA
+
+var data = {
+	'women_power_snatch':	{
+		'small': 'images/power_snatch/small/LB_Training_W01.',
+		'medium': 'images/power_snatch/medium/LB_Training_W01.',
+		'large': 'images/power_snatch/large/LB_Training_W01.',
+		'step': 4,
+		'stepMobile': 8,
+		'first': 1,
+		'last': 150,
+		'controller': 'type1'
+	}
+};
+
+var controllerData = {
+	'type1':
+	{
+		'x': 150,
+		'y': 100,
+		'direction': 'top',
+		'controlPoint': .6,
+		'path':
+		{
+			'd': [ 19,19.5,21.875532150268555,21.301651000976562,24.660114288330078,23.241741180419922,30.03569793701172,27.38509750366211,32.639320373535156,29.56220245361328,37.694061279296875,34.092018127441406,40.148681640625,36.43588638305664,42.5567741394043,38.82754135131836,42.5567741394043,38.82754135131836,44.91938018798828,41.26414108276367,49.51146697998047,46.26264953613281,51.74248504638672,48.82029342651367,53.930965423583984,51.41443634033203,56.077552795410156,54.04335021972656,58.18280792236328,56.705482482910156,60.2470588684082,59.3995246887207,62.27106475830078,62.12394714355469,66.19941711425781,67.65946960449219,68.1048583984375,70.46809387207031,69.9716796875,73.30253601074219,71.80011749267578,76.1618881225586,73.59095764160156,79.044921875,75.34418487548828,81.95101165771484,77.06058502197266,84.8790054321289,80.3839111328125,90.79763793945312,80.3839111328125,90.79763793945312,81.99163055419922,93.78668212890625,83.56396484375,96.79449462890625,86.60368347167969,102.86369323730469,86.60368347167969,102.86369323730469,89.50666046142578,108.99948120117188,92.27562713623047,115.1969223022461,94.91366577148438,121.45120239257812,96.18470764160156,124.59821319580078,97.4241714477539,127.75777435302734,98.63224029541016,130.92950439453125,100.95643615722656,137.30709838867188,100.95643615722656,137.30709838867188,103.160400390625,143.72726440429688,104.21820831298828,146.9521942138672,105.2470932006836,150.18646240234375,106.24706268310547,153.42982482910156,108.16282653808594,159.94178771972656,109.07927703857422,163.209716796875,109.9682388305664,166.48519897460938,111.66621398925781,173.05735778808594,111.66621398925781,173.05735778808594,112.47581481933594,176.35336303710938,113.25929260253906,179.6556854248047,114.0176010131836,182.96388244628906,114.75019836425781,186.27786254882812,115.45819854736328,189.59716796875,116.1417007446289,192.921630859375,116.80061340332031,196.2510528564453,117.43573760986328,199.58509826660156,118.04733276367188,202.92355346679688,118.63561248779297,206.26617431640625,119.20055389404297,209.61282348632812,119.74280548095703,212.96319580078125,120.26264190673828,216.31716918945312,120.76031494140625,219.67445373535156,121.2361068725586,223.03492736816406,121.69029998779297,226.39840698242188,122.12313842773438,229.76467895507812,122.12313842773438,229.76467895507812,122.53492736816406,233.13360595703125,122.92591857910156,236.5050048828125,123.64665985107422,243.2545928955078,123.97697448730469,246.6325225830078,124.57796478271484,253.3938446044922,124.57796478271484,253.3938446044922,125.10225677490234,260.1615295410156,125.33609771728516,263.5474548339844,125.74809265136719,270.32293701171875,125.9271240234375,273.7121887207031,126.0877914428711,277.1023864746094,126.23115539550781,280.4933776855469,126.3570785522461,283.885009765625,126.46556091308594,287.2772521972656,126.55750274658203,290.6700134277344,126.69047546386719,297.4566955566406],
+			'color': '#FFFFFF',
+			'style': '2',
+			'dash': { 'segment': [ 18, 8 ], 'offset': 8 }
+		},
+		'manifest':[
+			{ 'id': 'start', 'src': 'frontend/drgPoint.png' },
+			{ 'id': 'end', 'src': 'frontend/drgPoint.png' },
+			{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png' },
+			{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png' }
+		]
+	},
+	
+	'type2':
+	{
+		'x': 275,
+		'y': 100,
+		'direction': 'bottom',
+		'controlPoint': .6,
+		'path':
+		{
+			'd': [ 19,19.5,21.875532150268555,21.301651000976562,24.660114288330078,23.241741180419922,30.03569793701172,27.38509750366211,32.639320373535156,29.56220245361328,37.694061279296875,34.092018127441406,40.148681640625,36.43588638305664,42.5567741394043,38.82754135131836,42.5567741394043,38.82754135131836,44.91938018798828,41.26414108276367,49.51146697998047,46.26264953613281,51.74248504638672,48.82029342651367,53.930965423583984,51.41443634033203,56.077552795410156,54.04335021972656,58.18280792236328,56.705482482910156,60.2470588684082,59.3995246887207,62.27106475830078,62.12394714355469,66.19941711425781,67.65946960449219,68.1048583984375,70.46809387207031,69.9716796875,73.30253601074219,71.80011749267578,76.1618881225586,73.59095764160156,79.044921875,75.34418487548828,81.95101165771484,77.06058502197266,84.8790054321289,80.3839111328125,90.79763793945312,80.3839111328125,90.79763793945312,81.99163055419922,93.78668212890625,83.56396484375,96.79449462890625,86.60368347167969,102.86369323730469,86.60368347167969,102.86369323730469,89.50666046142578,108.99948120117188,92.27562713623047,115.1969223022461,94.91366577148438,121.45120239257812,96.18470764160156,124.59821319580078,97.4241714477539,127.75777435302734,98.63224029541016,130.92950439453125,100.95643615722656,137.30709838867188,100.95643615722656,137.30709838867188,103.160400390625,143.72726440429688,104.21820831298828,146.9521942138672,105.2470932006836,150.18646240234375,106.24706268310547,153.42982482910156,108.16282653808594,159.94178771972656,109.07927703857422,163.209716796875,109.9682388305664,166.48519897460938,111.66621398925781,173.05735778808594,111.66621398925781,173.05735778808594,112.47581481933594,176.35336303710938,113.25929260253906,179.6556854248047,114.0176010131836,182.96388244628906,114.75019836425781,186.27786254882812,115.45819854736328,189.59716796875,116.1417007446289,192.921630859375,116.80061340332031,196.2510528564453,117.43573760986328,199.58509826660156,118.04733276367188,202.92355346679688,118.63561248779297,206.26617431640625,119.20055389404297,209.61282348632812,119.74280548095703,212.96319580078125,120.26264190673828,216.31716918945312,120.76031494140625,219.67445373535156,121.2361068725586,223.03492736816406,121.69029998779297,226.39840698242188,122.12313842773438,229.76467895507812,122.12313842773438,229.76467895507812,122.53492736816406,233.13360595703125,122.92591857910156,236.5050048828125,123.64665985107422,243.2545928955078,123.97697448730469,246.6325225830078,124.57796478271484,253.3938446044922,124.57796478271484,253.3938446044922,125.10225677490234,260.1615295410156,125.33609771728516,263.5474548339844,125.74809265136719,270.32293701171875,125.9271240234375,273.7121887207031,126.0877914428711,277.1023864746094,126.23115539550781,280.4933776855469,126.3570785522461,283.885009765625,126.46556091308594,287.2772521972656,126.55750274658203,290.6700134277344,126.69047546386719,297.4566955566406],
+			'color': '#FFFFFF',
+			'style': '2',
+			'dash': { 'segment': [ 18, 8 ], 'offset': 8 }
+		},
+		'manifest':[
+			{ 'id': 'start', 'src': 'frontend/drgPoint.png' },
+			{ 'id': 'end', 'src': 'frontend/drgPoint.png' },
+			{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png' },
+			{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png' }
+		]
+	}
+};
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// MATH FUNC.
+var MATH = {
+	
+	getDistance: function( x1, y1, x2, y2 ){
+		var dx = x2 - x1, dy = y2 - y1;
+	    return Math.abs( Math.sqrt( dx * dx + dy * dy ) );	
+	},
+	
+	getCurvePoints: function( ptsa, tension, numOfSegments ){
+		
+		tension = (tension != 'undefined') ? tension : 0.5;
+		numOfSegments = numOfSegments ? numOfSegments : 16;
+		
+		var _pts = [],
+			res = [], // clone array and result
+			x, y, // our x,y coords
+			t1x, t2x, t1y, t2y, // tension vectors
+			c1, c2, c3, c4, // cardinal points
+			st, st2, st3, st23, st32, // steps
+			l, t, i; // steps based on num. of segments
+		
+		_pts = ptsa.concat();
+		_pts.unshift( ptsa[ 1 ] );
+		_pts.unshift( ptsa[ 0 ] );
+		_pts.push( ptsa[ ptsa.length - 2 ] );
+		_pts.push( ptsa[ ptsa.length - 1 ] );
+		
+		l = ( _pts.length - 4 );
+		for( i = 2; i < l; i += 2 ){
+			for( t = 0; t <= numOfSegments; t++ ){
+		
+				// calc tension vectors
+				t1x = ( _pts[ i + 2 ] - _pts[ i - 2 ] ) * tension;
+				t2x = ( _pts[ i + 4 ] - _pts[ i ] ) * tension;
+		
+				t1y = ( _pts[ i + 3 ] - _pts[ i - 1 ] ) * tension;
+				t2y = ( _pts[ i + 5 ] - _pts[ i + 1 ] ) * tension;
+		
+				// pre-calc step
+				st = t / numOfSegments;
+				st2 = st * st;
+				st3 = st2 * st;
+				st23 = st3 * 2;
+				st32 = st2 * 3;
+		
+				// calc cardinals
+				c1 = st23 - st32 + 1;
+				c2 = -( st23 ) + st32;
+				c3 = st3 - 2 * st2 + st;
+				c4 = st3 - st2;
+		
+				// calc x and y cords with common control vectors
+				x = c1 * _pts[ i ] + c2 * _pts[ i + 2 ] + c3 * t1x + c4 * t2x;
+				y = c1 * _pts[ i + 1 ] + c2 * _pts[ i + 3 ] + c3 * t1y + c4 * t2y;
+		
+				//store points in array
+				res.push({ 'x': x, 'y': y });
+				
+			}
+		}
+		
+		return res;
+	
+	}
+
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CREATEJS DASHED STROKE
+(createjs.Graphics.StrokeDash = function( segments, offset ){
+    this.segments = segments;
+    this.offset = offset;
+}).prototype.exec = function( ctx ){
+    ctx.setLineDash( this.segments );
+    ctx.lineDashOffset = this.offset;
+};
+createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
+    return this.append( new createjs.Graphics.StrokeDash( segments, offset ) );
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// GLOBAL FUNC.
+$.extend({
+    keyCount : function(o) {
+        if( typeof o == 'object' ){
+            var i, count = 0;
+            for( i in o ) {
+                if( o.hasOwnProperty( i ) ){
+                    count++;
+                }
+            }
+            return count;
+        } else {
+            return false;
+        }
+    }
+}); 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// PRELOADER
+(function(window){
+	
+	function Preloader( obj, callback ){
+		
+		var preload = new createjs.LoadQueue( true );
+			preload.on('progress', handleProgress);
+			preload.on('complete', handleComplete);
+			preload.on('fileload', handleFileLoad);
+			preload.loadManifest( obj, true );
+		
+		function handleProgress( e ){
+			callbackDetect( {'type': 'progress', 'value': e.loaded } );
+		}
+		
+		function handleFileLoad( e ){
+			// nothing
+		}
+		
+		function handleComplete( e ){
+			callbackDetect( {'type': 'complete', 'value': e['target'] } );
+			if( preload != null ) preload.close();
+		}
+		
+		function callbackDetect( obj ){
+			if( callback != undefined && obj != undefined ) callback( obj );
+		}			
+		
+	};
+	
+	window.Preloader = Preloader;
+	
+})(window);
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CONTROLLER
+
+
+(function(window){
+	
+	function Controller( o, callback ){
+		
+		var con = new createjs.Container(), points = MATH.getCurvePoints( o['path']['d'], .5 ), ln, le = points.length - 1, rate = 0, dir = o['direction'], cPoint = o['controlPoint'] || .6;
+		
+		con.y = o['y'];
+		con.x = o['x'];
+		con.scaleX = SCALEX;
+		con.scaleY = SCALEY;		
+				
+		scene.addChild( con );
+			
+		function init(){
+			ln = drawLine()
+			add( ln );
+			new Preloader( o['manifest'], function( k ){ if( k['type'] == 'complete' ) complete( k['value'] ); });
+		}
+	
+		function complete( obj ){
+			var o = obj['_loadedResults'];
+			if( o['start'] != undefined ) add( drawBitmap( { 'img': o['start'], 'type': 'static', 'name': 'start', 'coor':{ 'x': points[ 0 ]['x'], 'y': points[ 0 ]['y'] } } ) );
+			if( o['end'] != undefined ) add( drawBitmap( { 'img': o['end'], 'type': 'static', 'name': 'end', 'coor':{ 'x': points[ le ]['x'], 'y': points[ le ]['y'] } } ) );
+			if( o['drag1'] != undefined ){
+				if( dir == 'bottom' || dir == 'right' )
+					add( drawBitmap( { 'img': o['drag1'], 'type': 'drag', 'name': 'drag', 'coor':{ 'x': points[ le ]['x'], 'y': points[ le ]['y'] } } ) );
+				else if( dir == 'top' || dir == 'left' )
+					add( drawBitmap( { 'img': o['drag1'], 'type': 'drag', 'name': 'drag', 'coor':{ 'x': points[ 0 ]['x'], 'y': points[ 0 ]['y'] } } ) );
+			}
+		}
+		
+		function drawBitmap( o ){
+			var b = new createjs.Bitmap( o['img'] ), w = b.image.width, h = b.image.height;
+				b.x = o['coor']['x'];
+				b.y = o['coor']['y'];
+				b.regX = w * .5 | 0;
+				b.regY = h * .5 | 0;
+				b.name = o['name'];
+				
+				// EVENT
+				if( o['type'] == 'drag' ){
+					b.cursor = 'pointer';			
+					b.hitArea = new createjs.Shape( new createjs.Graphics().beginFill("#f00").drawRect( -w * .5, -h * .5, w * 2, h * 2 ) );
+					dragEvents( b );
+				}
+			
+			return b;	
+		}
+		
+		function dragEvents( el ){
+			
+			var rX = 1 / SCALEX, rY = 1 / SCALEY;
+			
+			el.draggable = true;
+			
+			/*
+			el.on('click', function( evt ){
+				rate = ( dir == 'bottom' || dir == 'right' ) ? 1 : 0;
+			});
+			*/
+			
+			el.on('mousedown', function( evt ){				
+				if( this.draggable )
+					this.offset = { x: this.x - ( evt.stageX * rX ), y: this.y - ( evt.stageY * rY ) };
+				else return false;
+				
+			});
+		
+			el.on('pressmove', function( evt ){
+				
+				if( this.draggable ){
+				
+					update = true;
+					
+					var x = ( evt.stageX * rX ) + this.offset.x,	y = ( evt.stageY * rY ) + this.offset.y, pIndex = -1, minDist = 999999999, dist;
+					
+					for( var i = 0; i < le; i += 2 ){
+						dist = MATH.getDistance( x, y, points[ i ]['x'], points[ i ]['y'] );
+						if( dist < minDist ){
+							minDist = dist;
+							pIndex = i;
+						}
+					}
+					
+					this.x = points[ pIndex ]['x'];
+					this.y = points[ pIndex ]['y'];
+					this.rotation = Math.atan2( points[ pIndex ]['y'] - y, points[ pIndex ]['x'] - x ) * 180 / Math.PI;
+	
+					/*var p = [];
+						p[ 0 ] = points[ pIndex - 1 ];
+						p[ 1 ] = points[ pIndex + 1 ];
+					if( p[ 0 ] != undefined && p[ 1 ] != undefined ){
+						var angle = Math.atan2( p[ 1 ].y - p[ 0 ].y, p[ 1 ].x - p[ 0 ].x ) * 180 / Math.PI;
+						this.rotation = angle;
+					}*/
+					
+					
+					rate = pIndex / le;
+					callbackDetect( rate );
+				}
+				
+			});
+			
+			el.on('pressup', function( evt ){
+				if( this.draggable ){
+					checkControlPoint( el, rate );
+				}
+			});
+	
+			el.on('rollover', function( evt ){
+				update = true;
+			});
+	
+			el.on('rollout', function( evt ){
+				update = true;
+			});
+			
+		}
+		
+		function checkControlPoint( el, rate ){
+			
+			var _this = this, k = 0, r = ( dir == 'bottom' || dir == 'right' ) ? 1 - cPoint : cPoint;
+				_this.value = rate;
+			
+			callbackDetect( rate );
+				
+			if( dir == 'bottom' || dir == 'right' ){
+				if( rate <= r ) k = 0;
+				else k = 1;
+			}else{
+				if( rate >= r ) k = 1;
+				else k = 0;
+			}
+		
+			createjs
+			.Tween
+			.get( _this )
+			.to({ value: k }, 555)
+			.call(function(){
+				// complete
+				if( ( ( dir == 'bottom' || dir == 'right' ) && k == 0 ) || ( ( dir == 'top' || dir == 'left' ) && k == 1 ) ) el.draggable = false;
+				callbackDetect( rate );
+			})
+			.addEventListener('change', function(){
+				var o = points[ Math.round( _this.value * le ) ];
+				if( o != undefined ){
+					el.x = o['x'];
+					el.y = o['y'];
+					update = true;
+				}
+				
+				rate = _this.value;
+				callbackDetect( rate );
+			});
+			
+		}
+		
+		function drawLine(){
+			var line = new createjs.Shape(), stroke = o['path'];
+				line.graphics.setStrokeStyle( stroke['style'] ).setStrokeDash( stroke['dash']['segment'], stroke['dash']['offset'] ).beginStroke( stroke['color'] );
+				
+			for( i = 0; i < le; i+=2 ){
+				var x = points[ i ]['x'], y = points[ i ]['y'];
+				if( i > 0 ) 
+					line.graphics.lineTo( x, y );
+				else 
+					line.graphics.moveTo( x, y );
+			}
+			line.graphics.endStroke();
+			
+			return line;
+		}
+		
+		function dynamicMasking( r ){
+			var o = points[ Math.round( r * le ) ];
+			var msk = new createjs.Shape();
+				msk.graphics.beginFill("#ff0000").drawRect( 0, 0, 146, 307 ).arc( o['x'], o['y'], 19, 0, Math.PI * 2, true );
+			
+			ln.mask = msk;
+		}
+		
+		function add( k ){
+			con.addChild( k );
+			update = true;
+		}
+		
+		function callbackDetect( r ){
+			dynamicMasking( r );
+			if( callback != undefined ) callback({ 'rate': r });
+		}
+		
+		init();
+					
+		// PUBLIC FUNC.
+		this.adjust = function(){
+		
+		};
+		this.destroy = function(){
+		
+		};
+	};
+	
+	window.Controller = Controller;
+	
+})(window);
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS
+
+(function(window){
+	
+	function Canvas( o, callback ){
+		
+		var con = new createjs.Container(), _loadItemsById, _loadedResults, maxCount = 0;
+		
+		container.addChild( con );
+			
+		function init(){
+			
+			var obj = data['women_power_snatch'], sml = obj['small'], md = obj['medium'], lrg = obj['large'], stp = isMobile ? obj['stepMobile'] : obj['step'], first = obj['first'], last = obj['last'], counter = 0, manifest = [];
+			for( var i = first; i <= last; ++i ){
+				if( i % stp == 1 ){
+					
+					var imgName = '', n = i.toString().length, o = {};
+					if( n == 1 ) imgName = '000';
+					else if( n == 2 ) imgName = '00';
+					else if( n == 3 ) imgName = '0';
+					imgName = imgName + i + '.jpg';
+					
+					o['id'] = counter;
+					o['src'] = md + imgName;
+					o['paths'] = { 'small': sml + imgName, 'medium': md + imgName, 'large': lrg + imgName };
+					manifest.push( o );
+					
+					counter++;
+				}
+			}
+			
+			new Preloader( manifest, function( k ){ 
+				if( k['type'] == 'progress' ) progress( k['value'] );
+				else if( k['type'] == 'complete' ) complete( k['value'] ); 
+			});
+		
+		}
+		
+		function progress( e ){
+			preloading.css({ 'width': 100 * e + '%' });
+		}
+		
+		function complete( e ) {
+	
+			preloading.css({ 'width': '100%' });
+			
+			setTimeout(function(){ preloading.addClass('completed'); }, 100 );
+	
+			_loadItemsById = e['_loadItemsById'];
+			_loadedResults = e['_loadedResults'];
+			maxCount = $.keyCount( _loadItemsById ) - 1;
+			
+			
+			new Controller( controllerData['type2'], function( o ){
+							
+				var dir = 'bottom', rate = o['rate'], cr = 0;
+				if( dir == 'bottom' || dir == 'rigth' ) cr = Math.round( ( 1 - rate ) * maxCount );
+				else if( dir == 'top' || dir == 'left' ) cr = Math.round( rate * maxCount );
+				drawCanvas( cr ); 
+
+			});
+					
+			drawCanvas( 0 );
+			events.onResize();
+		}
+		
+		function drawCanvas( k ){
+			if( con.getNumChildren() > 0 ) con.removeAllChildren();
+			
+			var bmp = new createjs.Bitmap( _loadedResults[ k ] );
+				bmp.x = 0;
+				bmp.y = 0;
+				
+			con.addChild( bmp );
+			
+			update = true;
+		}
+	
+		
+		init();
+					
+		// PUBLIC FUNC.
+		this.adjust = function(){
+		
+		};
+		this.destroy = function(){
+		
+		};
+	};
+	
+	window.Canvas = Canvas;
+	
+})(window);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+new Canvas();
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// RESIZE
+
+/*  
+	http://stackoverflow.com/questions/10212683/jquery-drag-resize-with-css-transform-scale  
+	http://www.sitepoint.com/creating-a-simple-windows-8-game-with-javascript-game-basics-createjseaseljs/ 
+	https://github.com/CreateJS/EaselJS/issues/14
+*/
+
+function sceneResize(){
+    
+	
+	
+	var wRatio, hRatio, ratio = imgW / imgH;
+	
+	
+	/* ORANTI 1 */
+	if ( wt / ht >= ratio ){
+		
+		wRatio = wt;
+		hRatio = wt / ratio;
+		
+	}else{
+		
+		wRatio = ht * ratio;
+		hRatio = ht;
+		
+	}
+
+	canvas.attr( 'width', wt ).attr( 'height', ht );
+	
+	//container.setBounds ( Math.round( ( wt - wRatio ) * .5 ),  Math.round( ( ht - hRatio ) * .5 ),  wRatio,  hRatio );
+			
+	container.x = Math.round( ( wt - wRatio ) * .5 );
+	container.y = Math.round( ( ht - hRatio ) * .5 );
+	container.scaleX = wRatio / imgW;
+	container.scaleY = hRatio / imgH;
+	
+	
+	
+	
+	
+	/* ORANTI 2 
+	if( wt / ht >= ratio ){
+		wRatio = ht * ratio;
+		hRatio = ht;
+	}else{
+		wRatio = wt;
+		hRatio = wt / ratio;
+	}
+	canvas.css({ 'width': Math.round( wRatio ), 'height': Math.round( hRatio ), 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ) });
+	*/
+	
+	/* ORANTI 3
+	if ( wt / ht >= ratio ){
+		wRatio = wt;
+		hRatio = wt / ratio;
+	}else{
+		wRatio = ht * ratio;
+		hRatio = ht;
+	}
+	canvas.css({ 'width': Math.round( wRatio ), 'height': Math.round( hRatio ), 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ) });
+	*/
+
+	scene.update();
+		
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// GLOBAL EVENTS
+var events =
+{
+	
+	init: function(){
+	
+	},
+	
+	onResize: function(){
+		wt = parseFloat( win.width() );
+		ht = parseFloat( win.height() );
+		
+		sceneResize();
+	},
+	
+	onScroll: function(){
+		wst = parseFloat( win.scrollTop() );
+		sRatio = wst / ( doc.height() - ht );
+	}
+	
+};
+
+win.load( events.init );
+win.resize( events.onResize ).resize();
+win.scroll( events.onScroll ).scroll();	
+
+
+</script>
+</body>
+</html>
