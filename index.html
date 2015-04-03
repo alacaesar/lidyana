@@ -627,24 +627,26 @@ function sceneResize(){
 		hRatio = ht;
 	}
 
-	/* ORANTI 2 
+	/* ORANTI 2 */
 	if( wt / ht >= ratio ){
 		wRatio = ht * ratio;
 		hRatio = ht;
 	}else{
 		wRatio = wt;
 		hRatio = wt / ratio;
-	}*/
+	}
 
 	canvas.attr( 'width', wt ).attr( 'height', ht );
 	
-	/*container.x = Math.round( ( wt - wRatio ) * .5 );
+	container.x = Math.round( ( wt - wRatio ) * .5 );
 	container.y = Math.round( ( ht - hRatio ) * .5 );
 	container.scaleX = wRatio / imgW;
 	container.scaleY = hRatio / imgH;
-	*/
-
+	
 	scene.update();
+	
+	//
+	$('#mainVideo, #loopVideo').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
 		
 }
 
