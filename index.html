@@ -17,12 +17,21 @@
   
   <div class="scene">
     
-    <video id="videoPlayer">
-      <source src="demo-video/video.mp4" type="video/mp4" poster=""></source>
+	<!-- Main Video -->
+    <video id="mainVideo" poster="">
+      <source src="demo-video/video.mp4" type="video/mp4"></source>
     </video>
     
+    <!-- Scrup -->
     <div class="hdImage"></div>
     <canvas id="Canvas" width="640" height="360"></canvas>
+  	
+    <!-- Loop Video -->
+    <!-- http://convert-video-online.com/tr/ -->
+    <video id="loopVideo" poster="" loop>
+      <source src="demo-video/loop.mp4" type="video/mp4"></source>
+    </video>
+    
   </div>
   <!-- -->
   
@@ -468,10 +477,8 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 				if( dir == 'bottom' || dir == 'rigth' ) cr = Math.round( ( 1 - rate ) * maxCount );
 				else if( dir == 'top' || dir == 'left' ) cr = Math.round( rate * maxCount );
 				drawCanvas( cr ); 
-					
 				//
-				if( callback != undefined && rate == 0 ) 	
-					callback( 'go' );
+				callbackDetect( rate );
 					
 			});
 					
@@ -489,6 +496,10 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 			con.addChild( bmp );
 			
 			update = true;
+		}
+		
+		function callbackDetect( r ){
+			if( callback != undefined ) callback({ 'rate': r });
 		}
 	
 		init();
@@ -513,12 +524,13 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 	
 	function Section( o, callback ){
 		
-		var video = $('#videoPlayer'), videoFrame, frmRate = 30, totalFrame = 0, controlPoint = { 'begin': 760, 'end': 879 }, preview = true;
+		var loop = $('#loopVideo'), video = $('#mainVideo'), videoFrame, frmRate = 30, totalFrame = 0, cPoint = { 'begin': 760, 'end': 879 }, preview = true;
 			
 		function init(){
 			// Video
-			videoFrame = VideoFrame({ id: 'videoPlayer', frameRate: frmRate, callback: function(){ progressVideo( videoFrame.get() ); } });
+			videoFrame = VideoFrame({ id: 'mainVideo', frameRate: frmRate, callback: function(){ progress( videoFrame.get() ); } });
 			videoFrame.listen('frame');		
+			videoFrame.seekTo( { frame: 730 } );
 			video[ 0 ].addEventListener('loadedmetadata', function(e){ totalFrame = Math.floor( video[ 0 ].duration.toFixed( 5 ) * frmRate ); video[ 0 ].play(); });
 			video.bind('click', function(){
 				if( preview ){
@@ -531,21 +543,42 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 			});
 			
 			// Scrup
-			new Scrup({}, function( k ){
-				if( k == 'go' ){
-					video[ 0 ].play();
+			new Scrup({}, function( o ){
+				var rate = o['rate'];
+				if( rate == 0 ){
 					$('.scene').removeClass('scrup');
+					videoFrame.seekTo( { frame: cPoint['end'] } );
+					setTimeout(function(){
+						video[ 0 ].play();
+					}, 250);
 				}
-			});
+			});			
 		}
 		
-		function progressVideo( currentFrame ){
-			if( controlPoint['begin'] == currentFrame ){
+		function progress( currentFrame ){
+			progressBar( currentFrame );
+			controlPoint( currentFrame );
+		}
+		
+		function progressBar( k ){
+			$('.wrapper .timeline .controller .inside .progress').css({ 'width': ( k / totalFrame * 100 ) + '%' });
+		}
+		
+		function controlPoint( k ){
+			
+			// scrup
+			if( cPoint['begin'] == k ){
 				video[ 0 ].pause();
 				$('.scene').addClass('scrup');
 			}
+
+			// loop
+			if( totalFrame - 1 == k ){
+				video[ 0 ].pause();
+				loop[ 0 ].play();
+				$('.scene').removeClass('scrup').addClass('loop');
+			}
 			
-			console.log( currentFrame / totalFrame );
 		}
 		
 		init();
