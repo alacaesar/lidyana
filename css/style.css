@@ -12,17 +12,28 @@ body, html{ width:100%; height:100%; overflow:hidden; background:#000; }
 /* SETUP */
 .wrapper{ width:100%; height:100%; position:relative; }
 .wrapper .scene{ width:100%; height:100%; }
-.wrapper .scene canvas, .wrapper .scene .hdImage, .wrapper .scene #mainVideo, .wrapper .scene #loopVideo{ position:fixed; top:0; left:0; }
+.wrapper .scene canvas, .wrapper .scene .hdImage, .wrapper .scene #mainVideo, .wrapper .scene #loopVideo, .wrapper .scene #pointers{ position:fixed; top:0; left:0; }
 .wrapper .scene .hdImage{ pointer-events: none; width:100%; height:100%; background-size:cover; background-position:center; }
 
 .wrapper .scene #mainVideo{ z-index:1; }
-.wrapper .scene canvas{ z-index:2; }
-.wrapper .scene .hdImage{ z-index:3; }
-.wrapper .scene #loopVideo{ z-index:4; display:none; }
+.wrapper .scene #pointers{ z-index:2; }
+.wrapper .scene canvas{ z-index:3; }
+.wrapper .scene .hdImage{ z-index:4; }
+.wrapper .scene #loopVideo{ z-index:5; display:none; }
 .wrapper .scene.loop #loopVideo{ display:block; }
 
 .wrapper .scene canvas, .wrapper .scene .hdImage{ opacity:0; -webkit-transition:opacity 222ms ease-in-out;-moz-transition:opacity 222ms ease-in-out;-o-transition:opacity 222ms ease-in-out;transition:opacity 222ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
 .wrapper .scene.scrup canvas, .wrapper .scene.scrup .hdImage{ opacity:1; }
+
+/* POINTERS */
+.wrapper .scene #pointers > a{ visibility:hidden; opacity:0; pointer-events: none; -webkit-transition:opacity 222ms ease-in-out;-moz-transition:opacity 222ms ease-in-out;-o-transition:opacity 222ms ease-in-out;transition:opacity 222ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
+.wrapper .scene #pointers > a.show{ opacity:1; visibility:visible; }
+
+.wrapper .scene #pointers > a.pointer{ position:absolute; top:0; left:0; border-radius:50%; width:20px; height:20px; display:block; z-index:2; -webkit-transition:all .2s linear; }
+.wrapper .scene #pointers > a.pointer.red{ background:red; }
+.wrapper .scene #pointers > a.pointer.blue{ background:blue; }
+.wrapper .scene #pointers > a.pointer.yellow{ background:yellow; }
+.wrapper .scene #pointers > a::after{ background:black; opacity:.3; content:''; width:100px; height:100px; z-index:-1; position:absolute; left:-40px; top:-40px; }
 
 /* PRELOADING */ 
 .wrapper .preloading{ background:red; width:0; height:5px; transition: width 0.5s ease; position:absolute; top:0; left:0; }

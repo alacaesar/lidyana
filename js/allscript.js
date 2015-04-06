@@ -158,6 +158,19 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 })(window);
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SVG TO ARRAY
+function convertToArr( o ){
+	var path = document.createElementNS('http://www.w3.org/2000/svg', 'path'), len = 0, arr = [];
+		path.setAttribute('d', o);
+	len = path.getTotalLength();	
+	for( var i = 0; i <= 100; ++i ){
+		var o = path.getPointAtLength( len * i / 100 );
+		arr.push( o['x'] );
+		arr.push( o['y'] );
+	}
+	return arr;		
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CONTROLLER
 
 
@@ -165,7 +178,7 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 	
 	function Controller( o, callback ){
 		
-		var con = new createjs.Container(), points = MATH.getCurvePoints( o['path']['d'], .5 ), ln, le = points.length - 1, rate = 0, dir = o['direction'], cPoint = o['controlPoint'] || .6;
+		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, le = points.length - 1, rate = 0, dir = o['direction'] || 'bottom', cPoint = o['controlPoint'] || .9;
 		
 		con.y = o['y'];
 		con.x = o['x'];
@@ -372,7 +385,7 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 
 (function(window){
 	
-	function Scrup( o, callback ){
+	function Scrup( obj, callback ){
 		
 		var con = new createjs.Container(), _loadItemsById, _loadedResults, maxCount = 0;
 		
@@ -380,7 +393,7 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 			
 		function init(){
 			
-			var obj = data['women_power_snatch'], sml = obj['small'], md = obj['medium'], lrg = obj['large'], stp = isMobile ? obj['stepMobile'] : obj['step'], first = obj['first'], last = obj['last'], counter = 0, manifest = [];
+			var sml = obj['small'], md = obj['medium'], lrg = obj['large'], stp = isMobile ? obj['stepMobile'] : obj['step'], first = obj['first'], last = obj['last'], counter = 0, manifest = [];
 			for( var i = first; i <= last; ++i ){
 				
 				if( stp > 1 )
@@ -424,7 +437,7 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 			maxCount = MATH.keyCount( _loadItemsById ) - 1;
 			
 			
-			new Controller( controllerData['type2'], function( o ){
+			new Controller( obj['controller'], function( o ){
 							
 				var dir = 'bottom', rate = o['rate'], cr = 0;
 				if( dir == 'bottom' || dir == 'rigth' ) cr = Math.round( ( 1 - rate ) * maxCount );
@@ -475,9 +488,9 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 
 (function(window){
 	
-	function Section( o, callback ){
+	function Section( obj, callback ){
 		
-		var loop = $('#loopVideo'), video = $('#mainVideo'), videoFrame, frmRate = 30, totalFrame = 0, cPoint = { 'begin': 760, 'end': 879 }, preview = true;
+		var loop = $('#loopVideo'), video = $('#mainVideo'), pointers = $('#pointers > a'), videoFrame, frmRate = 30, totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
 			
 		function init(){
 			// Video
@@ -496,8 +509,8 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 			});
 			
 			// Scrup
-			new Scrup({}, function( o ){
-				var rate = o['rate'];
+			new Scrup(obj['scrup'], function( k ){
+				var rate = k['rate'];
 				if( rate == 0 ){
 					$('.scene').removeClass('scrup');
 					videoFrame.seekTo( { frame: cPoint['end'] } );
@@ -509,6 +522,7 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 		}
 		
 		function progress( currentFrame ){
+			pointerControl( currentFrame );
 			progressBar( currentFrame );
 			controlPoint( currentFrame );
 		}
@@ -534,6 +548,25 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 			
 		}
 		
+		function pointerControl( k ){
+			var obj = cuePoint[ k ];
+			if( obj ){
+				pointers.each(function( i, k ){
+						var _this = $( this ), rel = _this.attr('rel');
+						if( rel != undefined ){
+							var o = obj[ rel ];
+							if( o != undefined ){
+								var x = ( o['x'] / imgW * 100 ) + '%',
+									y = ( o['y'] / imgH * 100 ) + '%';
+								_this.css({ 'top': y, 'left': x });
+								if( o['state'] ) _this.addClass('show');
+								else  _this.removeClass('show');
+							}
+						}
+				});
+			}
+		}
+		
 		init();
 					
 		// PUBLIC FUNC.
@@ -552,7 +585,7 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// TIMELINE
 (function(window){
 	
-	function Timeline( o, callback ){
+	function Timeline( obj, callback ){
 			
 		function init(){
 			
@@ -615,6 +648,8 @@ function sceneResize(){
 		hRatio = wt / ratio;
 	}
 
+	
+	
 	canvas.attr( 'width', wt ).attr( 'height', ht );
 	
 	container.x = Math.round( ( wt - wRatio ) * .5 );
@@ -622,11 +657,13 @@ function sceneResize(){
 	container.scaleX = wRatio / imgW;
 	container.scaleY = hRatio / imgH;
 	
-	scene.update();
+	
+	
 	
 	//
-	$('#mainVideo, #loopVideo').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
-		
+	$('#mainVideo, #loopVideo, #pointers').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
+	
+	scene.update();	
 }
 
 

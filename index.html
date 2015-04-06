@@ -14,24 +14,27 @@
 <body>
 <div class="wrapper">
   <div class="preloading"></div>
-  
-  <div class="scene">
+  <div class="scene"> 
     
-	<!-- Main Video -->
+    <!-- Pointers -->
+    <div id="pointers" class="pointers"> <a href="javascript:void(0);" rel="red" class="pointer red"></a><a href="javascript:void(0);" rel="blue" class="pointer blue"></a><a href="javascript:void(0);" rel="yellow" class="pointer yellow"></a> </div>
+    
+    <!-- Main Video -->
     <video id="mainVideo" poster="">
-      <source src="demo-video/video.mp4" type="video/mp4"></source>
+      <source src="demo-video/video.mp4" type="video/mp4">
+      </source>
     </video>
     
     <!-- Scrup -->
     <div class="hdImage"></div>
     <canvas id="Canvas" width="640" height="360"></canvas>
-  	
-    <!-- Loop Video -->
+    
+    <!-- Loop Video --> 
     <!-- http://convert-video-online.com/tr/ -->
     <video id="loopVideo" poster="" loop>
-      <source src="demo-video/loop.mp4" type="video/mp4"></source>
+      <source src="demo-video/loop.mp4" type="video/mp4">
+      </source>
     </video>
-    
   </div>
   <!-- -->
   
