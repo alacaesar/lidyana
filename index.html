@@ -6,8 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=0.7", user-scalable="no">
 <link rel="stylesheet" href="css/reset.css" type="text/css">
 <link rel="stylesheet" href="css/style.css" type="text/css">
-<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
-<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/jquery-1.11.2.min.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="js/data.js"></script>
 <script type="text/javascript" src="js/plugins.js"></script>
 </head>
@@ -26,19 +26,20 @@
     </video>
     
     <!-- Scrup -->
-    <div class="hdImage"></div>
-    <canvas id="Canvas" width="640" height="360"></canvas>
-    
-    <!-- Controller -->
     <div class="scrupWrapper">
-    <div class="con">
-        <div class="inside">
+      <div class="hdImage"></div>
+      <canvas id="Canvas" width="640" height="360"></canvas>
+      
+      <!-- Controller -->
+      <div class="controller">
+        <div class="holder">
+          <div class="inside">
             <canvas id="Controller" width="500" height="500"></canvas>
-            <h2 class="slogan">KALKMASINA DESTEK OL<small>Oku çek</small></h2>
+            <h2 id="slogan" class="type">KALKMASINA DESTEK OL<small>Oku çek</small></h2>
+          </div>
         </div>
-        </div>
-	</div>  
-    
+      </div>
+    </div>
     
     <!-- Loop Video --> 
     <!-- http://convert-video-online.com/tr/ -->

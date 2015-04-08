@@ -180,31 +180,61 @@ function convertToArr( o ){
 	
 	function Controller( o, callback ){
 		
-		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, le = points.length - 1, rate = 0, dir = o['direction'] || 'bottom', cPoint = o['controlPoint'] || .9;
-		
-		con.y = 0;
-		con.x = 0;
-		con.scaleX = SCALEX;
-		con.scaleY = SCALEY;		
-				
-		controller.addChild( con );
+		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, rate = 0, dir = o['direction'] || 'bottom', cPoint = o['controlPoint'] || .9, slogan = $('#slogan'), scPoint = null;
 			
 		function init(){
-			ln = drawLine()
+			// Setup 
+			con.scaleX = SCALEX;
+			con.scaleY = SCALEY;			
+			controller.addChild( con );
+			
+			// Line
+			ln = drawLine();
 			add( ln );
-			new Preloader( o['manifest'], function( k ){ if( k['type'] == 'complete' ) complete( k['value'] ); });
+			
+			// Slogan
+			initSlogan();
+			
+			// Buttons
+			if( o['manifest'] )
+				new Preloader( o['manifest'], function( k ){ if( k['type'] == 'complete' ) complete( k['value'] ); });
+		}
+		
+		function initSlogan(){
+			var obj = o['slogan'];
+			if( obj ){
+				scPoint = obj['controlPoint'];
+				slogan.html( obj['content'] ).removeAttr('class').addClass( obj['customClass'] ).css({ 'left': obj['x'], 'top': obj['y'] });
+			}else{
+				slogan.addClass('hidden');
+			}
+		}
+		
+		function checkSlogan( r ){
+			if( scPoint != null ){
+				if( dir == 'bottom' || dir == 'rigth' ) r = 1 - r;
+				if( r > scPoint ) slogan.addClass('change');
+				else slogan.removeClass('change'); 
+			}
 		}
 	
 		function complete( obj ){
-			var o = obj['_loadedResults'];
-			if( o['start'] != undefined ) add( drawBitmap( { 'img': o['start'], 'type': 'static', 'name': 'start', 'coor':{ 'x': points[ 0 ]['x'], 'y': points[ 0 ]['y'] } } ) );
-			if( o['end'] != undefined ) add( drawBitmap( { 'img': o['end'], 'type': 'static', 'name': 'end', 'coor':{ 'x': points[ le ]['x'], 'y': points[ le ]['y'] } } ) );
-			if( o['drag1'] != undefined ){
+						
+			var result = obj['_loadedResults'], id = obj['_loadItemsById'], begin = { 'x': points[ 0 ]['x'], 'y': points[ 0 ]['y'] }, end = { 'x': points[ le ]['x'], 'y': points[ le ]['y'] };
+			
+			if( result['start'] ) 
+				add( drawBitmap( { 'img': result['start'], 'type': 'static', 'opacity': id['start']['opacity'] || 1 , 'name': 'start', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
+			
+			if( result['end'] ) 
+				add( drawBitmap( { 'img': result['end'], 'type': 'static', 'opacity': id['end']['opacity'] || 1 , 'name': 'end', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
+			
+			if( result['drag1'] ){
 				if( dir == 'bottom' || dir == 'right' )
-					add( drawBitmap( { 'img': o['drag1'], 'type': 'drag', 'name': 'drag', 'coor':{ 'x': points[ le ]['x'], 'y': points[ le ]['y'] } } ) );
+					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'] || 1 , 'name': 'drag', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
 				else if( dir == 'top' || dir == 'left' )
-					add( drawBitmap( { 'img': o['drag1'], 'type': 'drag', 'name': 'drag', 'coor':{ 'x': points[ 0 ]['x'], 'y': points[ 0 ]['y'] } } ) );
+					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'] || 1 , 'name': 'drag', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
 			}
+			
 		}
 		
 		function drawBitmap( o ){
@@ -214,6 +244,7 @@ function convertToArr( o ){
 				b.regX = w * .5 | 0;
 				b.regY = h * .5 | 0;
 				b.name = o['name'];
+				b.alpha = o['opacity'];
 				
 				// EVENT
 				if( o['type'] == 'drag' ){
@@ -230,13 +261,7 @@ function convertToArr( o ){
 			var rX = 1 / SCALEX, rY = 1 / SCALEY;
 			
 			el.draggable = true;
-			
-			/*
-			el.on('click', function( evt ){
-				rate = ( dir == 'bottom' || dir == 'right' ) ? 1 : 0;
-			});
-			*/
-			
+						
 			el.on('mousedown', function( evt ){				
 				if( this.draggable )
 					this.offset = { x: this.x - ( evt.stageX * rX ), y: this.y - ( evt.stageY * rY ) };
@@ -336,6 +361,7 @@ function convertToArr( o ){
 		function drawLine(){
 			var line = new createjs.Shape(), stroke = o['path'];
 				line.graphics.setStrokeStyle( stroke['style'] ).setStrokeDash( stroke['dash']['segment'], stroke['dash']['offset'] ).beginStroke( stroke['color'] );
+				line.alpha = stroke['opacity'] || 1;
 				
 			for( i = 0; i < le; i+=2 ){
 				var x = points[ i ]['x'], y = points[ i ]['y'];
@@ -345,16 +371,14 @@ function convertToArr( o ){
 					line.graphics.moveTo( x, y );
 			}
 			line.graphics.endStroke();
-			
+						
 			return line;
 		}
 		
 		function dynamicMasking( r ){
 			var o = points[ Math.round( r * le ) ];
-			var msk = new createjs.Shape();
-				msk.graphics.beginFill("#ff0000").drawRect( 0, 0, 146, 307 ).arc( o['x'], o['y'], 19, 0, Math.PI * 2, true );
-			
-			ln.mask = msk;
+			lnMsk.graphics.beginFill("#ff0000").drawRect( 0, 0, 500, 500 ).arc( o['x'], o['y'], 19, 0, Math.PI * 2, true );
+			ln.mask = lnMsk;
 		}
 		
 		function add( k ){
@@ -363,6 +387,7 @@ function convertToArr( o ){
 		}
 		
 		function callbackDetect( r ){
+			checkSlogan( r );
 			dynamicMasking( r );
 			if( callback != undefined ) callback({ 'rate': r });
 		}
@@ -441,7 +466,7 @@ function convertToArr( o ){
 			
 			new Controller( obj['controller'], function( o ){
 							
-				var dir = 'bottom', rate = o['rate'], cr = 0;
+				var dir = obj['controller']['direction'], rate = o['rate'], cr = 0;
 				if( dir == 'bottom' || dir == 'rigth' ) cr = Math.round( ( 1 - rate ) * maxCount );
 				else if( dir == 'top' || dir == 'left' ) cr = Math.round( rate * maxCount );
 				drawCanvas( cr ); 
@@ -512,8 +537,9 @@ function convertToArr( o ){
 			
 			// Scrup
 			new Scrup(obj['scrup'], function( k ){
-				var rate = k['rate'];
-				if( rate == 0 ){
+				var rate = k['rate'], dir = obj['scrup']['controller']['direction'], k = 0;
+				if( dir == 'top' || dir == 'left' ) k = 1;
+				if( rate == k ){
 					$('.scene').removeClass('scrup');
 					videoFrame.seekTo( { frame: cPoint['end'] } );
 					setTimeout(function(){
@@ -663,7 +689,7 @@ function sceneResize(){
 	
 	
 	//
-	$('#mainVideo, #loopVideo, #pointers, .scrupWrapper').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
+	$('#mainVideo, #loopVideo, #pointers, .scrupWrapper .controller').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
 	
 	scene.update();	
 }

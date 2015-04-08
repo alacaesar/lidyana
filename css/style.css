@@ -18,38 +18,41 @@
 .clearfix:after{clear:both}
 * html .clearfix{zoom:1}
 .floatFixer{display:block;height:0;clear:both;visibility:hidden;font-size:0;margin:0;padding:0;line-height:0}
-
 body, html{ width:100%; height:100%; overflow:hidden; background:#000; }
+.wrapper .hidden{ display:none; }
 
 /* SETUP */
 .wrapper{ width:100%; height:100%; position:relative; }
 .wrapper .scene{ width:100%; height:100%; }
-.wrapper .scene #Canvas, .wrapper .scene .hdImage, .wrapper .scene #mainVideo, .wrapper .scene #loopVideo, .wrapper .scene #pointers, .wrapper .scene .scrupWrapper{ position:fixed; top:0; left:0; }
+.wrapper .scene #Canvas, .wrapper .scene .hdImage, .wrapper .scene #mainVideo, .wrapper .scene #loopVideo, .wrapper .scene #pointers, .wrapper .scene .scrupWrapper .controller{ position:fixed; top:0; left:0; }
 .wrapper .scene .hdImage{ pointer-events: none; width:100%; height:100%; background-size:cover; background-position:center; }
 
 .wrapper .scene #mainVideo{ z-index:1; }
 .wrapper .scene #pointers{ z-index:2; }
 .wrapper .scene #Canvas{ z-index:3; }
 .wrapper .scene .hdImage{ z-index:4; }
-.wrapper .scene .scrupWrapper{ z-index:5; }
+.wrapper .scene .scrupWrapper .controller{ z-index:5; }
 .wrapper .scene #loopVideo{ z-index:6; display:none; }
 .wrapper .scene.loop #loopVideo{ display:block; }
 
 
 /* Scrup */
-.wrapper .scene canvas, .wrapper .scene .hdImage{ opacity:0; -webkit-transition:opacity 222ms ease-in-out;-moz-transition:opacity 222ms ease-in-out;-o-transition:opacity 222ms ease-in-out;transition:opacity 222ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
-.wrapper .scene.scrup canvas, .wrapper .scene.scrup .hdImage{ opacity:1; }
+.wrapper .scene .scrupWrapper .controller, .wrapper .scene .scrupWrapper #Canvas, .wrapper .scene .scrupWrapper .hdImage{ visibility:hidden; will-change:opacity; opacity:0; pointer-events: none; -webkit-transition:opacity 444ms ease-in-out;-moz-transition:opacity 444ms ease-in-out;-o-transition:opacity 444ms ease-in-out;transition:opacity 444ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
+.wrapper .scene.scrup .scrupWrapper .controller, .wrapper .scene.scrup .scrupWrapper #Canvas, .wrapper .scene.scrup .scrupWrapper .hdImage{ opacity:1; visibility:visible; pointer-events: auto; }
 
 /* Controller */
-.wrapper .scene .scrupWrapper .con{ position:absolute; left:72%; top:27%; }
-.wrapper .scene .scrupWrapper .con .inside{ position:relative; }
-.wrapper .scene .scrupWrapper .con .inside > h2{ position:absolute; top:290px; left:150px; }
-.wrapper .scene .scrupWrapper .con .inside > h2{ font-family: 'trade'; color:#FFF; font-size:59px; width:260px; }
-.wrapper .scene .scrupWrapper .con .inside > h2 small{ font-family: 'trade'; color:#FFF; font-size:22px; display:inline-block; }
+#Controller{ width:100%; }
+.wrapper .scene .scrupWrapper .controller .inside{ width:100%; height:100%; }
+.wrapper .scene .scrupWrapper .controller .holder{ position:absolute; left:62%; top:27%; }
+.wrapper .scene .scrupWrapper .controller .holder .inside{ position:relative; }
+
+.wrapper .scene .scrupWrapper .controller .holder .inside #slogan{ position:absolute; font-family: 'trade'; color:#FFF; font-size:59px; will-change:opacity; opacity:1; pointer-events: none; -webkit-transition:opacity 222ms ease-in-out;-moz-transition:opacity 222ms ease-in-out;-o-transition:opacity 222ms ease-in-out;transition:opacity 222ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
+.wrapper .scene .scrupWrapper .controller .holder .inside #slogan small{ font-family: 'trade'; color:#FFF; font-size:22px; display:block; }
+.wrapper .scene .scrupWrapper .controller .holder .inside #slogan.change{ opacity:0; }
 
 /* POINTERS */
-.wrapper .scene #pointers > a{ visibility:hidden; opacity:0; pointer-events: none; -webkit-transition:opacity 222ms ease-in-out;-moz-transition:opacity 222ms ease-in-out;-o-transition:opacity 222ms ease-in-out;transition:opacity 222ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
-.wrapper .scene #pointers > a.show{ opacity:1; visibility:visible; }
+.wrapper .scene #pointers > a{ visibility:hidden; will-change:opacity; opacity:0; pointer-events: none; -webkit-transition:opacity 222ms ease-in-out;-moz-transition:opacity 222ms ease-in-out;-o-transition:opacity 222ms ease-in-out;transition:opacity 222ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
+.wrapper .scene #pointers > a.show{ opacity:1; visibility:visible; pointer-events: auto; }
 
 .wrapper .scene #pointers > a.pointer{ position:absolute; top:0; left:0; border-radius:50%; width:20px; height:20px; display:block; z-index:2; -webkit-transition:all .2s linear; }
 .wrapper .scene #pointers > a.pointer.red{ background:red; }
