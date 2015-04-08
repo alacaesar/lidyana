@@ -1,3 +1,15 @@
+/* FONT FACE */
+@font-face {
+    font-family: 'trade';
+    src: url('fonts/tradegothiccondbold-webfont.eot');
+    src: url('fonts/tradegothiccondbold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/tradegothiccondbold-webfont.woff') format('woff'),
+         url('fonts/tradegothiccondbold-webfont.ttf') format('truetype'),
+         url('fonts/tradegothiccondbold-webfont.svg#tradegothiccondbold-webfont') format('svg');
+    font-style: normal;
+	font-variant:normal;
+}
+
 /* GLOBAL */
 .wrapper *{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;font-family:arial;font-size:13px;color:#000;font-weight:400;font-style:normal;text-align:left;line-height:1;margin:0;padding:0;border:none;outline:0;vertical-align:baseline;text-decoration:none;list-style:none}
 ::-moz-selection{ background:#FF0; color:#000; text-shadow:none }
@@ -31,7 +43,9 @@ body, html{ width:100%; height:100%; overflow:hidden; background:#000; }
 /* Controller */
 .wrapper .scene .scrupWrapper .con{ position:absolute; left:72%; top:27%; }
 .wrapper .scene .scrupWrapper .con .inside{ position:relative; }
-.wrapper .scene .scrupWrapper .con .inside > h2{ position:absolute; top:0; left:0; color:#FFF; }
+.wrapper .scene .scrupWrapper .con .inside > h2{ position:absolute; top:290px; left:150px; }
+.wrapper .scene .scrupWrapper .con .inside > h2{ font-family: 'trade'; color:#FFF; font-size:59px; width:260px; }
+.wrapper .scene .scrupWrapper .con .inside > h2 small{ font-family: 'trade'; color:#FFF; font-size:22px; display:inline-block; }
 
 /* POINTERS */
 .wrapper .scene #pointers > a{ visibility:hidden; opacity:0; pointer-events: none; -webkit-transition:opacity 222ms ease-in-out;-moz-transition:opacity 222ms ease-in-out;-o-transition:opacity 222ms ease-in-out;transition:opacity 222ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
