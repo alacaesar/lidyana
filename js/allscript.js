@@ -593,7 +593,7 @@ function convertToArr( o ){
 				timeline.minusDropDown({ openedDelay: 222 });
 			
 			
-			new Section( section['r'] );		
+			new Section( section['running'] );		
 		}
 		
 		init();
