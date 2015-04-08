@@ -1,6 +1,41 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// DATA
 var section = {
 	
+	'begin': {
+		'main': { 'src' : 'demo-video/video.mp4', 'poster': '', 'controlPoint': { 'begin': 760, 'end': 879 } },
+		'loop': { 'src' : 'demo-video/loop.mp4', 'poster': '' },
+		'scrup': {
+			'small': 'demo-video/sequence/demo-',
+			'medium': 'demo-video/sequence/demo-',
+			'large': 'demo-video/sequence/demo-',
+			'step': 1,
+			'stepMobile': 8,
+			'first': 0,
+			'last': 121,
+			'controller': {
+				'x': 275,
+				'y': 100,
+				'direction': 'bottom',
+				'controlPoint': .9,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 18, 8 ], 'offset': 8 }
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png' },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png' },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png' },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png' }
+				]
+			}
+		}
+	},
+	
+	
+	
 	'running': {
 		'cue-point': {
 			'pointers': [],
