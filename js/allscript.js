@@ -1,15 +1,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, container, el = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1;
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, el = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
 	scene = new createjs.Stage('Canvas');
+	controller = new createjs.Stage('Controller');
 	container = new createjs.Container();
 	scene.addChild( container );
 	createjs.Ticker.setFPS( 30 );
-	createjs.Touch.enable( scene );
+	createjs.Touch.enable( controller );
 	scene.enableMouseOver(10);
 	scene.mouseMoveOutside = true;
 	
@@ -19,6 +20,7 @@ var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = pa
 		if( update ){
 			update = false;
 			scene.update( event );
+			controller.update( event );
 		}
 	}
 	function stop(){
@@ -180,12 +182,12 @@ function convertToArr( o ){
 		
 		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, le = points.length - 1, rate = 0, dir = o['direction'] || 'bottom', cPoint = o['controlPoint'] || .9;
 		
-		con.y = o['y'];
-		con.x = o['x'];
+		con.y = 0;
+		con.x = 0;
 		con.scaleX = SCALEX;
 		con.scaleY = SCALEY;		
 				
-		scene.addChild( con );
+		controller.addChild( con );
 			
 		function init(){
 			ln = drawLine()
@@ -661,7 +663,7 @@ function sceneResize(){
 	
 	
 	//
-	$('#mainVideo, #loopVideo, #pointers').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
+	$('#mainVideo, #loopVideo, #pointers, .scrupWrapper').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
 	
 	scene.update();	
 }
