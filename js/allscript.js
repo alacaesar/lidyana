@@ -238,13 +238,15 @@ function convertToArr( o ){
 					add( drawBitmap( { 'img': result['end'], 'type': 'static', 'opacity': id['end']['opacity'], 'name': 'end', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );				
 			}
 			
+			/*
 			if( result['drag1'] ){
 				if( dir == 'bottom' || dir == 'right' )
 					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'], 'name': 'drag', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
 				else if( dir == 'top' || dir == 'left' )
 					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'], 'name': 'drag', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
 			}
-			
+			*/
+			dragBtn( { 'normal': result['drag1'], 'hover':result['drag2'], 'coor':{ 'begin': begin, 'end': end } } );
 		}
 		
 		function drawBitmap( o ){
@@ -266,13 +268,41 @@ function convertToArr( o ){
 			return b;	
 		}
 		
+		
+		function dragBtn( o ){
+			var b = new createjs.Container(), w = 40, h = 40,
+				nr = drawBitmap( { 'img': o['normal'], 'opacity': 1, 'name': 'normal', 'coor':{ 'x': 0, 'y': 0 } } ),
+				hv = drawBitmap( { 'img': o['hover'], 'opacity': 0, 'name': 'hover', 'coor':{ 'x': 0, 'y': 0 } } );
+			
+			b.addChild( nr );
+			b.addChild( hv );	
+			b.name = 'dragBtn';
+			b.cursor = 'pointer';			
+			b.hitArea = new createjs.Shape( new createjs.Graphics().beginFill("#f00").drawRect( -w * .5, -h * .5, w * 2, h * 2 ) );
+			
+			if( dir == 'bottom' || dir == 'right' ){
+				b.x = o['coor']['end']['x'];
+				b.y = o['coor']['end']['y'];
+			}else{
+				b.x = o['coor']['begin']['x'];
+				b.y = o['coor']['begin']['y'];
+			}
+			
+			add( b );
+			dragEvents( b );
+		}
+		
 		function dragEvents( el ){
 			
 			var rX = 1 / SCALEX, rY = 1 / SCALEY;
 			
 			el.draggable = true;
 						
-			el.on('mousedown', function( evt ){				
+			el.on('mousedown', function( evt ){
+				
+				this.getChildByName('normal').alpha = 0;
+				this.getChildByName('hover').alpha = 1;
+								
 				if( this.draggable )
 					this.offset = { x: this.x - ( evt.stageX * rX ), y: this.y - ( evt.stageY * rY ) };
 				else return false;
@@ -310,6 +340,7 @@ function convertToArr( o ){
 					
 					rate = pIndex / le;
 					callbackDetect( rate );
+					
 				}
 				
 			});
@@ -318,6 +349,9 @@ function convertToArr( o ){
 				if( this.draggable ){
 					if( rtn ) checkControlPoint( el, rate );
 				}
+				
+				this.getChildByName('normal').alpha = 1;
+				this.getChildByName('hover').alpha = 0;
 			});
 	
 			el.on('rollover', function( evt ){
