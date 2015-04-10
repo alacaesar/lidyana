@@ -17,24 +17,26 @@ var section = {
 			'first': 0,
 			'last': 121,
 			'controller': {
-				'slogan': { 'content': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3, 'x': 150, 'y': 290 },
+				'slogan': { 'content': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3, 'x': '33%', 'y': '53%' },
 				'x': '62%',
 				'y': '27%',
 				'direction': 'bottom',
-				'controlPoint': .9,
+				'controlPoint': .8,
+				'return': true,
 				'path':
 				{
 					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
 					'color': '#FFFFFF',
 					'style': '2',
-					'dash': { 'segment': [ 18, 8 ], 'offset': 8 },
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
 					'opacity': .5
 				},
 				'manifest':[
-					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
-					{ 'id': 'end', 'src': 'frontend/drgPoint.png' },
-					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png' },
-					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png' }
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
 				]
 			}
 		}

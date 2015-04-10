@@ -180,21 +180,23 @@ function convertToArr( o ){
 	
 	function Controller( o, callback ){
 		
-		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, rate = 0, dir = o['direction'] || 'bottom', cPoint = o['controlPoint'] || .9, slogan = $('#slogan'), scPoint = null;
+		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, rate = 0, dir = o['direction'] || 'bottom', cPoint = o['controlPoint'] || .9, rtn = o['return'], slogan = $('#slogan'), scPoint = null;
 			
 		function init(){
+			
+			// Slogan
+			initSlogan();
+			
 			// Setup 
 			con.scaleX = SCALEX;
-			con.scaleY = SCALEY;			
+			con.scaleY = SCALEY;	
+			con.x = con.y = 10;		
 			controller.addChild( con );
 			
 			// Line
 			ln = drawLine();
 			add( ln );
-			
-			// Slogan
-			initSlogan();
-			
+
 			// Buttons
 			if( o['manifest'] )
 				new Preloader( o['manifest'], function( k ){ if( k['type'] == 'complete' ) complete( k['value'] ); });
@@ -222,17 +224,25 @@ function convertToArr( o ){
 						
 			var result = obj['_loadedResults'], id = obj['_loadItemsById'], begin = { 'x': points[ 0 ]['x'], 'y': points[ 0 ]['y'] }, end = { 'x': points[ le ]['x'], 'y': points[ le ]['y'] };
 			
-			if( result['start'] ) 
-				add( drawBitmap( { 'img': result['start'], 'type': 'static', 'opacity': id['start']['opacity'] || 1 , 'name': 'start', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
+			if( result['start'] ){ 
+				if( dir == 'bottom' || dir == 'right' )
+					add( drawBitmap( { 'img': result['start'], 'type': 'static', 'opacity': id['start']['opacity'], 'name': 'start', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
+				else if( dir == 'top' || dir == 'left' )
+					add( drawBitmap( { 'img': result['start'], 'type': 'static', 'opacity': id['start']['opacity'], 'name': 'start', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );		
+			}
 			
-			if( result['end'] ) 
-				add( drawBitmap( { 'img': result['end'], 'type': 'static', 'opacity': id['end']['opacity'] || 1 , 'name': 'end', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
+			if( result['end'] ){ 	
+				if( dir == 'bottom' || dir == 'right' )
+					add( drawBitmap( { 'img': result['end'], 'type': 'static', 'opacity': id['end']['opacity'], 'name': 'end', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
+				else if( dir == 'top' || dir == 'left' )
+					add( drawBitmap( { 'img': result['end'], 'type': 'static', 'opacity': id['end']['opacity'], 'name': 'end', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );				
+			}
 			
 			if( result['drag1'] ){
 				if( dir == 'bottom' || dir == 'right' )
-					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'] || 1 , 'name': 'drag', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
+					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'], 'name': 'drag', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
 				else if( dir == 'top' || dir == 'left' )
-					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'] || 1 , 'name': 'drag', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
+					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'], 'name': 'drag', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
 			}
 			
 		}
@@ -306,7 +316,7 @@ function convertToArr( o ){
 			
 			el.on('pressup', function( evt ){
 				if( this.draggable ){
-					checkControlPoint( el, rate );
+					if( rtn ) checkControlPoint( el, rate );
 				}
 			});
 	
@@ -381,12 +391,35 @@ function convertToArr( o ){
 			ln.mask = lnMsk;
 		}
 		
+		function checkElement( r ){
+			var el, r = ( dir == 'bottom' || dir == 'rigth' ) ? 1 - r : r;
+			
+			// end
+			if( cPoint != null ){
+				el = con.getChildByName('end');
+				if( r >= cPoint ){
+					el.alpha = 1;
+					el.scaleX = el.scaleY = 1.3;
+				}
+				else{
+					el.alpha = .5; 
+					el.scaleX = el.scaleY = 1;
+				}
+			}
+			
+			// start
+			el = con.getChildByName('start');
+			if( r > 0 ) el.alpha = 1;
+			else el.alpha = 0;
+		}
+	
 		function add( k ){
 			con.addChild( k );
 			update = true;
 		}
 		
 		function callbackDetect( r ){
+			checkElement( r );
 			checkSlogan( r );
 			dynamicMasking( r );
 			if( callback != undefined ) callback({ 'rate': r });
@@ -562,13 +595,14 @@ function convertToArr( o ){
 		function controlPoint( k ){
 			
 			// scrup
-			if( cPoint['begin'] == k ){
+			//if( cPoint['begin'] == k ){
+			if( k >= cPoint['begin'] - 2 && k <= cPoint['begin'] + 2 ){
 				video[ 0 ].pause();
 				$('.scene').addClass('scrup');
 			}
 
 			// loop
-			if( totalFrame - 1 == k ){
+			if(  k >= totalFrame - 2 ){
 				video[ 0 ].pause();
 				loop[ 0 ].play();
 				$('.scene').removeClass('scrup').addClass('loop');
