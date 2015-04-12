@@ -624,7 +624,8 @@ function convertToArr( o ){
 		}
 		
 		function progressBar( k ){
-			$('.wrapper .timeline .controller .inside .progress').css({ 'width': ( k / totalFrame * 100 ) + '%' });
+			//$('.progress', timeline).css({ 'width': ( k / totalFrame * 100 ) + '%' });
+			if( callback != undefined ) callback( k / totalFrame * 100 );
 		}
 		
 		function controlPoint( k ){
@@ -683,14 +684,33 @@ function convertToArr( o ){
 (function(window){
 	
 	function Timeline( obj, callback ){
-			
+		
+		var le = MATH.keyCount( section ), rate = 100 / le;
+		
 		function init(){
 			
-			if( timeline.length > 0 )
-				timeline.minusDropDown({ openedDelay: 222 });
+			/*if( timeline.length > 0 )
+				timeline.minusDropDown({ openedDelay: 222 });*/
 			
-			
-			new Section( section['running'] );		
+			initTemplate();
+			new Section( section['running'], function( k ){
+				
+				progressBar( k );
+				
+			});		
+		}
+		
+		
+		function initTemplate(){
+			var t = '';
+			for( var i = 0; i < le; ++i )
+				t += '<li style="width:'+ rate +'%"></li>';
+			$('ul', timeline).html( t );
+		}
+		
+		function progressBar( k ){
+			$('.progress', timeline).css({ 'width': ( k / 100 * rate ) + '%' });
+			console.log(  k / 100 * rate );
 		}
 		
 		init();

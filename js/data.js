@@ -1,14 +1,19 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// DATA
 var section = {
 	
-	'start': {
-		'main': { 'src' : 'demo-video/video.mp4', 'poster': '', 'controlPoint': { 'begin': 760, 'end': 879 } },
-		'loop': { 'src' : 'demo-video/loop.mp4', 'poster': '' },
-	},
+	'boxing': {},
 	
+	'burpee': {},
 	
+	'yoga': {},
 	
+	'dancing': {},
 	
+	'coffee': {},
+	
+	'music': {},
+	
+	'juice': {},
 	
 	'running': {
 		'cue-point': {
@@ -17,6 +22,7 @@ var section = {
 		},
 		'main': { 'src' : 'demo-video/video.mp4', 'poster': '', 'controlPoint': { 'begin': 760, 'end': 879 } },
 		'loop': { 'src' : 'demo-video/loop.mp4', 'poster': '' },
+		'options':{ 'video': 'demo-video/loop.mp4', 'poster': '', 'content': '<h2>BAŞKA NE YAPSAK</h2>' },
 		'scrup': {
 			'small': 'demo-video/sequence/demo-',
 			'medium': 'demo-video/sequence/demo-',

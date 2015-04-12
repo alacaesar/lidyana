@@ -22,7 +22,8 @@
     <!-- Main Video -->
     <video id="mainVideo" poster="">
       <source src="demo-video/video.mp4" type="video/mp4">
-      </source>
+      <source src="demo-video/video.ogv" type='video/ogg'>
+      <source src="demo-video/video.webm" type='video/webm'>
     </video>
     
     <!-- Scrup -->
@@ -41,23 +42,34 @@
       </div>
     </div>
     
-    <!-- Loop Video --> 
-    <!-- http://convert-video-online.com/tr/ -->
-    <video id="loopVideo" poster="" loop>
-      <source src="demo-video/loop.mp4" type="video/mp4">
-      </source>
-    </video>
+    <!-- <options> -->
+    <div class="options"> 
+      <!-- http://convert-video-online.com/tr/ -->
+      <video id="loopVideo" poster="" loop>
+        <source src="demo-video/loop.mp4" type="video/mp4">
+        <source src="demo-video/loop.ogv" type='video/ogg'>
+        <source src="demo-video/loop.webm" type='video/webm'>
+      </video>
+      <div class="content"></div>
+    </div>
+    <!-- </options> -->
+    
   </div>
-  <!-- -->
   
+  <!-- <Timeline> -->
   <div class="timeline">
-    <div class="controller">
-      <div class="inside">
-        <div class="pointers"></div>
-        <div class="progress"></div>
-      </div>
+    <div class="inside">
+      <div class="progress"><span></span></div>
+      <ul>
+        <li class="watched"><a onclick="javascript:void(0)"><img src="content/section.jpg" /><b>ENDURANCE</b></a></li>
+        <li class="watched"><a onclick="javascript:void(0)"><img src="content/section2.jpg" /><b>RUNNING</b></a></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
     </div>
   </div>
+  <!-- </ Timeline> --> 
 </div>
 <script type="text/javascript" src="js/allscript.js"></script>
 </body>
