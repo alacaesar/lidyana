@@ -1,6 +1,15 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// DATA
 var section = {
 	
+	'start': {
+		'main': { 'src' : 'demo-video/video.mp4', 'poster': '', 'controlPoint': { 'begin': 760, 'end': 879 } },
+		'loop': { 'src' : 'demo-video/loop.mp4', 'poster': '' },
+	},
+	
+	
+	
+	
+	
 	'running': {
 		'cue-point': {
 			'pointers': [],
