@@ -11,8 +11,8 @@ var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = pa
 	scene.addChild( container );
 	createjs.Ticker.setFPS( 30 );
 	createjs.Touch.enable( controller );
-	scene.enableMouseOver(10);
-	scene.mouseMoveOutside = true;
+	controller.enableMouseOver( 10 );
+	controller.mouseMoveOutside = true;
 	
 	
 	createjs.Ticker.addEventListener('tick', tick);
@@ -180,9 +180,12 @@ function convertToArr( o ){
 	
 	function Controller( o, callback ){
 		
-		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, rate = 0, dir = o['direction'] || 'bottom', cPoint = o['controlPoint'] || .9, rtn = o['return'], slogan = $('#slogan'), scPoint = null;
+		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, dir = o['direction'] || 'bottom', rate, cPoint = o['controlPoint'] || .9, rtn = o['return'], slogan = $('#slogan'), scPoint = null;
 			
 		function init(){
+			
+			//
+			resetRate();
 			
 			// Slogan
 			initSlogan();
@@ -226,58 +229,52 @@ function convertToArr( o ){
 			
 			if( result['start'] ){ 
 				if( dir == 'bottom' || dir == 'right' )
-					add( drawBitmap( { 'img': result['start'], 'type': 'static', 'opacity': id['start']['opacity'], 'name': 'start', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
+					add( drawBitmap( { 'img': result['start'], 'opacity': id['start']['opacity'], 'name': 'start', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
 				else if( dir == 'top' || dir == 'left' )
-					add( drawBitmap( { 'img': result['start'], 'type': 'static', 'opacity': id['start']['opacity'], 'name': 'start', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );		
+					add( drawBitmap( { 'img': result['start'], 'opacity': id['start']['opacity'], 'name': 'start', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );		
 			}
 			
 			if( result['end'] ){ 	
 				if( dir == 'bottom' || dir == 'right' )
-					add( drawBitmap( { 'img': result['end'], 'type': 'static', 'opacity': id['end']['opacity'], 'name': 'end', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
+					add( drawBitmap( { 'img': result['end'], 'opacity': id['end']['opacity'], 'name': 'end', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
 				else if( dir == 'top' || dir == 'left' )
-					add( drawBitmap( { 'img': result['end'], 'type': 'static', 'opacity': id['end']['opacity'], 'name': 'end', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );				
+					add( drawBitmap( { 'img': result['end'], 'opacity': id['end']['opacity'], 'name': 'end', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );				
 			}
-			
-			/*
-			if( result['drag1'] ){
-				if( dir == 'bottom' || dir == 'right' )
-					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'], 'name': 'drag', 'coor':{ 'x': end['x'], 'y': end['y'] } } ) );
-				else if( dir == 'top' || dir == 'left' )
-					add( drawBitmap( { 'img': result['drag1'], 'type': 'drag', 'opacity': id['drag1']['opacity'], 'name': 'drag', 'coor':{ 'x': begin['x'], 'y': begin['y'] } } ) );
-			}
-			*/
+						
 			dragBtn( { 'normal': result['drag1'], 'hover':result['drag2'], 'coor':{ 'begin': begin, 'end': end } } );
+			
 		}
 		
-		function drawBitmap( o ){
+		function drawBitmap( o, reg ){
+			
+			reg = reg == undefined ? true : reg;
+			
 			var b = new createjs.Bitmap( o['img'] ), w = b.image.width, h = b.image.height;
 				b.x = o['coor']['x'];
 				b.y = o['coor']['y'];
-				b.regX = w * .5 | 0;
-				b.regY = h * .5 | 0;
+				if( reg ){
+					b.regX = w * .5 | 0;
+					b.regY = h * .5 | 0;
+				}
 				b.name = o['name'];
 				b.alpha = o['opacity'];
 				
-				// EVENT
-				if( o['type'] == 'drag' ){
-					b.cursor = 'pointer';			
-					b.hitArea = new createjs.Shape( new createjs.Graphics().beginFill("#f00").drawRect( -w * .5, -h * .5, w * 2, h * 2 ) );
-					dragEvents( b );
-				}
-			
 			return b;	
 		}
-		
-		
+				
 		function dragBtn( o ){
 			var b = new createjs.Container(), w = 40, h = 40,
-				nr = drawBitmap( { 'img': o['normal'], 'opacity': 1, 'name': 'normal', 'coor':{ 'x': 0, 'y': 0 } } ),
-				hv = drawBitmap( { 'img': o['hover'], 'opacity': 0, 'name': 'hover', 'coor':{ 'x': 0, 'y': 0 } } );
+				nr = drawBitmap( { 'img': o['normal'], 'opacity': 1, 'name': 'normal', 'coor':{ 'x': 0, 'y': 0 } }, false ),
+				hv = drawBitmap( { 'img': o['hover'], 'opacity': 0, 'name': 'hover', 'coor':{ 'x': 0, 'y': 0 } }, false );
 			
 			b.addChild( nr );
-			b.addChild( hv );	
+			b.addChild( hv );
+			b.regX = w * .5 | 0;
+			b.regY = h * .5 | 0;	
 			b.name = 'dragBtn';
-			b.cursor = 'pointer';			
+			b.cursor = 'pointer';
+			b.alpha = .5;
+			b.rotation = checkRotation( dir == 'bottom' || dir == 'right' ? le - 1 : 1 );			
 			b.hitArea = new createjs.Shape( new createjs.Graphics().beginFill("#f00").drawRect( -w * .5, -h * .5, w * 2, h * 2 ) );
 			
 			if( dir == 'bottom' || dir == 'right' ){
@@ -289,33 +286,24 @@ function convertToArr( o ){
 			}
 			
 			add( b );
-			dragEvents( b );
 		}
 		
 		function dragEvents( el ){
 			
 			var rX = 1 / SCALEX, rY = 1 / SCALEY;
-			
-			el.draggable = true;
 						
 			el.on('mousedown', function( evt ){
-				
 				this.getChildByName('normal').alpha = 0;
-				this.getChildByName('hover').alpha = 1;
-								
-				if( this.draggable )
-					this.offset = { x: this.x - ( evt.stageX * rX ), y: this.y - ( evt.stageY * rY ) };
-				else return false;
-				
+				this.getChildByName('hover').alpha = 1;			
+				this.offset = { x: this.x - ( evt.stageX * rX ), y: this.y - ( evt.stageY * rY ) };
 			});
 		
 			el.on('pressmove', function( evt ){
+							
+				update = true;
 				
-				if( this.draggable ){
-				
-					update = true;
-					
-					var x = ( evt.stageX * rX ) + this.offset.x,	y = ( evt.stageY * rY ) + this.offset.y, pIndex = -1, minDist = 999999999, dist;
+				if( this.offset ){
+					var x = ( evt.stageX * rX ) + this.offset.x, y = ( evt.stageY * rY ) + this.offset.y, pIndex = -1, minDist = 999999999, dist;
 					
 					for( var i = 0; i < le; i += 2 ){
 						dist = MATH.getDistance( x, y, points[ i ]['x'], points[ i ]['y'] );
@@ -324,32 +312,19 @@ function convertToArr( o ){
 							pIndex = i;
 						}
 					}
-					
 					this.x = points[ pIndex ]['x'];
 					this.y = points[ pIndex ]['y'];
-					this.rotation = Math.atan2( points[ pIndex ]['y'] - y, points[ pIndex ]['x'] - x ) * 180 / Math.PI;
-	
-					/*var p = [];
-						p[ 0 ] = points[ pIndex - 1 ];
-						p[ 1 ] = points[ pIndex + 1 ];
-					if( p[ 0 ] != undefined && p[ 1 ] != undefined ){
-						var angle = Math.atan2( p[ 1 ].y - p[ 0 ].y, p[ 1 ].x - p[ 0 ].x ) * 180 / Math.PI;
-						this.rotation = angle;
-					}*/
-					
+					this.rotation =  checkRotation( pIndex );					
 					
 					rate = pIndex / le;
 					callbackDetect( rate );
-					
-				}
 				
+				}
+					
 			});
 			
 			el.on('pressup', function( evt ){
-				if( this.draggable ){
-					if( rtn ) checkControlPoint( el, rate );
-				}
-				
+				if( rtn ) checkControlPoint( el, rate );
 				this.getChildByName('normal').alpha = 1;
 				this.getChildByName('hover').alpha = 0;
 			});
@@ -361,7 +336,18 @@ function convertToArr( o ){
 			el.on('rollout', function( evt ){
 				update = true;
 			});
-			
+		}
+		
+		function checkRotation( pIndex ){
+			var p = [], angle = 0;
+				if( pIndex == 0 ) pIndex = 1;
+				if( pIndex == le ) pIndex = le - 1;
+				p[ 0 ] = points[ pIndex - 1 ];
+				p[ 1 ] = points[ pIndex + 1 ];
+			if( p[ 0 ] != undefined && p[ 1 ] != undefined ){
+				angle = Math.atan2( p[ 1 ].y - p[ 0 ].y, p[ 1 ].x - p[ 0 ].x ) * 180 / Math.PI - 90;
+			}
+			return angle;
 		}
 		
 		function checkControlPoint( el, rate ){
@@ -385,17 +371,17 @@ function convertToArr( o ){
 			.to({ value: k }, 555)
 			.call(function(){
 				// complete
-				if( ( ( dir == 'bottom' || dir == 'right' ) && k == 0 ) || ( ( dir == 'top' || dir == 'left' ) && k == 1 ) ) el.draggable = false;
 				callbackDetect( rate );
+				resetRate();
 			})
 			.addEventListener('change', function(){
-				var o = points[ Math.round( _this.value * le ) ];
+				var ind = Math.round( _this.value * le ), o = points[ ind ];
 				if( o != undefined ){
 					el.x = o['x'];
 					el.y = o['y'];
+					el.rotation = checkRotation( ind );
 					update = true;
 				}
-				
 				rate = _this.value;
 				callbackDetect( rate );
 			});
@@ -443,15 +429,10 @@ function convertToArr( o ){
 			
 			// start
 			el = con.getChildByName('start');
-			if( r > 0 ) el.alpha = 1;
+			if( r >= .01 ) el.alpha = 1;
 			else el.alpha = 0;
 		}
-	
-		function add( k ){
-			con.addChild( k );
-			update = true;
-		}
-		
+
 		function callbackDetect( r ){
 			checkElement( r );
 			checkSlogan( r );
@@ -459,9 +440,25 @@ function convertToArr( o ){
 			if( callback != undefined ) callback({ 'rate': r });
 		}
 		
+		function resetRate(){
+			rate = ( dir == 'bottom' || dir == 'right' ) ? 1 : 0;
+		}
+		
+		function add( k ){
+			con.addChild( k );
+			update = true;
+		}
+				
 		init();
 					
 		// PUBLIC FUNC.
+		this.activeEvents = function(){
+			var el = con.getChildByName('dragBtn');
+			if( el ){
+				el.alpha = 1;
+				dragEvents( el );
+			}
+		}
 		this.adjust = function(){
 		
 		};
@@ -481,7 +478,7 @@ function convertToArr( o ){
 	
 	function Scrup( obj, callback ){
 		
-		var con = new createjs.Container(), _loadItemsById, _loadedResults, maxCount = 0;
+		var con = new createjs.Container(), _loadItemsById, _loadedResults, maxCount = 0, Cntrl;
 		
 		container.addChild( con );
 			
@@ -508,7 +505,20 @@ function convertToArr( o ){
 				counter++;
 		
 			}
-
+			
+			// Controller
+			Cntrl = new Controller( obj['controller'], function( o ){
+				if( maxCount > 0 ){			
+					var dir = obj['controller']['direction'], rate = o['rate'], cr = 0;
+					if( dir == 'bottom' || dir == 'rigth' ) cr = Math.round( ( 1 - rate ) * maxCount );
+					else if( dir == 'top' || dir == 'left' ) cr = Math.round( rate * maxCount );
+					drawCanvas( cr ); 
+					//
+					callbackDetect( rate );
+				}
+			});
+			
+			
 			new Preloader( manifest, function( k ){ 
 				if( k['type'] == 'progress' ) progress( k['value'] );
 				else if( k['type'] == 'complete' ) complete( k['value'] ); 
@@ -530,18 +540,9 @@ function convertToArr( o ){
 			_loadedResults = e['_loadedResults'];
 			maxCount = MATH.keyCount( _loadItemsById ) - 1;
 			
+			// controller active
+			Cntrl.activeEvents();	
 			
-			new Controller( obj['controller'], function( o ){
-							
-				var dir = obj['controller']['direction'], rate = o['rate'], cr = 0;
-				if( dir == 'bottom' || dir == 'rigth' ) cr = Math.round( ( 1 - rate ) * maxCount );
-				else if( dir == 'top' || dir == 'left' ) cr = Math.round( rate * maxCount );
-				drawCanvas( cr ); 
-				//
-				callbackDetect( rate );
-					
-			});
-					
 			drawCanvas( 0 );
 			events.onResize();
 		}
