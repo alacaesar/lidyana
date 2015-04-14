@@ -16,17 +16,21 @@
   <div class="preloading"></div>
   <div class="scene"> 
     
-    <!-- Pointers -->
+    <!---------------- Start Page ---------------->
+    <div id="startPage" class="startPage">
+        <div class="inside">
+            <img src="content/asla_pes_etme.png" class="slogan" />
+            <a class="bell" href="jaascript:void(0);"></a>
+        </div>
+    </div>
+    
+    <!---------------- Pointers ---------------->
     <div id="pointers" class="pointers"> <a href="javascript:void(0);" rel="red" class="pointer red"></a><a href="javascript:void(0);" rel="blue" class="pointer blue"></a><a href="javascript:void(0);" rel="yellow" class="pointer yellow"></a> </div>
     
-    <!-- Main Video -->
-    <video id="mainVideo" poster="">
-      <source src="demo-video/video.mp4" type="video/mp4">
-      <source src="demo-video/video.ogv" type='video/ogg'>
-      <source src="demo-video/video.webm" type='video/webm'>
-    </video>
+    <!---------------- Main Video ---------------->
+    <video id="mainVideo" src="demo-video/video.mp4" poster=""></video>
     
-    <!-- Scrup -->
+    <!---------------- Scrup ---------------->
     <div class="scrupWrapper">
       <div class="hdImage"></div>
       <canvas id="Canvas" width="640" height="360"></canvas>
@@ -36,27 +40,21 @@
         <div class="holder">
           <div class="inside">
             <canvas id="Controller" width="500" height="500"></canvas>
-            <h2 id="slogan" class="type">KALKMASINA DESTEK OL<small>Oku çek</small></h2>
+            <div id="content"></div>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- <options> -->
-    <div class="options"> 
-      <!-- http://convert-video-online.com/tr/ -->
-      <video id="loopVideo" poster="" loop>
-        <source src="demo-video/loop.mp4" type="video/mp4">
-        <source src="demo-video/loop.ogv" type='video/ogg'>
-        <source src="demo-video/loop.webm" type='video/webm'>
-      </video>
+    <!---------------- selections ---------------->
+    <div class="selections"> 
+      <video id="loopVideo" src="demo-video/loop.mp4" poster="" loop></video>
       <div class="content"></div>
     </div>
-    <!-- </options> -->
     
   </div>
   
-  <!-- <Timeline> -->
+  <!---------------- Timeline ---------------->
   <div class="timeline">
     <div class="inside">
       <div class="progress"><span></span></div>
@@ -69,7 +67,7 @@
       </ul>
     </div>
   </div>
-  <!-- </ Timeline> --> 
+
 </div>
 <script type="text/javascript" src="js/allscript.js"></script>
 </body>

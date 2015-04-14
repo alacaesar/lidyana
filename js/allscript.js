@@ -1,7 +1,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, el = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1;
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, el = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = 'mp4';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -108,6 +108,14 @@ var MATH = {
 
 };
 
+Array.prototype.shuffle=function(){
+	var len = this.length,tmp,i
+	while(len){
+		i=Math.random()*len-- |0;
+		tmp=this[len],this[len]=this[i],this[i]=tmp;
+	}
+	return this;
+};
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CREATEJS DASHED STROKE
 (createjs.Graphics.StrokeDash = function( segments, offset ){
@@ -180,7 +188,7 @@ function convertToArr( o ){
 	
 	function Controller( o, callback ){
 		
-		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, dir = o['direction'] || 'bottom', rate, cPoint = o['controlPoint'] || .9, rtn = o['return'], slogan = $('#slogan'), scPoint = null;
+		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, dir = o['direction'] || 'bottom', rate, cPoint = o['controlPoint'] || .9, rtn = o['return'], content = $('#content'), scPoint = null;
 			
 		function init(){
 			
@@ -188,7 +196,7 @@ function convertToArr( o ){
 			resetRate();
 			
 			// Slogan
-			initSlogan();
+			initContent();
 			
 			// Setup 
 			con.scaleX = SCALEX;
@@ -205,21 +213,21 @@ function convertToArr( o ){
 				new Preloader( o['manifest'], function( k ){ if( k['type'] == 'complete' ) complete( k['value'] ); });
 		}
 		
-		function initSlogan(){
-			var obj = o['slogan'];
+		function initContent(){
+			var obj = o['content'];
 			if( obj ){
 				scPoint = obj['controlPoint'];
-				slogan.html( obj['content'] ).removeAttr('class').addClass( obj['customClass'] ).css({ 'left': obj['x'], 'top': obj['y'] });
+				content.html( obj['html'] ).removeAttr('class').addClass( obj['customClass'] ).css({ 'left': obj['x'], 'top': obj['y'] });
 			}else{
-				slogan.addClass('hidden');
+				content.addClass('hidden');
 			}
 		}
 		
-		function checkSlogan( r ){
+		function checkContent( r ){
 			if( scPoint != null ){
 				if( dir == 'bottom' || dir == 'rigth' ) r = 1 - r;
-				if( r > scPoint ) slogan.addClass('change');
-				else slogan.removeClass('change'); 
+				if( r > scPoint ) content.addClass('change');
+				else content.removeClass('change'); 
 			}
 		}
 	
@@ -435,7 +443,7 @@ function convertToArr( o ){
 
 		function callbackDetect( r ){
 			checkElement( r );
-			checkSlogan( r );
+			checkContent( r );
 			dynamicMasking( r );
 			if( callback != undefined ) callback({ 'rate': r });
 		}
@@ -585,7 +593,7 @@ function convertToArr( o ){
 	
 	function Section( obj, callback ){
 		
-		var loop = $('#loopVideo'), video = $('#mainVideo'), pointers = $('#pointers > a'), videoFrame, frmRate = 30, totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
+		var scrup = obj['scrup'], loop = $('#loopVideo'), video = $('#mainVideo'), pointers = $('#pointers > a'), videoFrame, frmRate = 30, totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
 			
 		function init(){
 			// Video
@@ -604,17 +612,16 @@ function convertToArr( o ){
 			});
 			
 			// Scrup
-			new Scrup(obj['scrup'], function( k ){
-				var rate = k['rate'], dir = obj['scrup']['controller']['direction'], k = 0;
-				if( dir == 'top' || dir == 'left' ) k = 1;
-				if( rate == k ){
-					$('.scene').removeClass('scrup');
-					videoFrame.seekTo( { frame: cPoint['end'] } );
-					setTimeout(function(){
-						video[ 0 ].play();
-					}, 250);
-				}
-			});			
+			if( scrup ){
+				new Scrup(scrup, function( k ){
+					var rate = k['rate'], dir = scrup['controller']['direction'], k = 0;
+					if( dir == 'top' || dir == 'left' ) k = 1;
+					if( rate == k ){
+						$('.scene').removeClass('scrup');
+						continua();
+					}
+				});	
+			}
 		}
 		
 		function progress( currentFrame ){
@@ -624,17 +631,16 @@ function convertToArr( o ){
 		}
 		
 		function progressBar( k ){
-			//$('.progress', timeline).css({ 'width': ( k / totalFrame * 100 ) + '%' });
-			if( callback != undefined ) callback( k / totalFrame * 100 );
+			callbackDetect( { 'type': 'progress', 'value': k / totalFrame * 100 } );
 		}
 		
 		function controlPoint( k ){
 			
 			// scrup
-			//if( cPoint['begin'] == k ){
 			if( k >= cPoint['begin'] - 2 && k <= cPoint['begin'] + 2 ){
 				video[ 0 ].pause();
-				$('.scene').addClass('scrup');
+				if( scrup ) $('.scene').addClass('scrup');
+				callbackDetect({ 'type': 'controlPoint', 'value': 'begin' });
 			}
 
 			// loop
@@ -642,32 +648,48 @@ function convertToArr( o ){
 				video[ 0 ].pause();
 				loop[ 0 ].play();
 				$('.scene').removeClass('scrup').addClass('loop');
+				callbackDetect({ 'type': 'selections' });
 			}
 			
 		}
 		
 		function pointerControl( k ){
-			var obj = cuePoint[ k ];
-			if( obj ){
-				pointers.each(function( i, k ){
-						var _this = $( this ), rel = _this.attr('rel');
-						if( rel != undefined ){
-							var o = obj[ rel ];
-							if( o != undefined ){
-								var x = ( o['x'] / imgW * 100 ) + '%',
-									y = ( o['y'] / imgH * 100 ) + '%';
-								_this.css({ 'top': y, 'left': x });
-								if( o['state'] ) _this.addClass('show');
-								else  _this.removeClass('show');
+			if( obj['cue-point'] ){
+				var c = cuePoint[ k ];
+				if( c ){
+					pointers.each(function( i, k ){
+							var _this = $( this ), rel = _this.attr('rel');
+							if( rel != undefined ){
+								var o = c[ rel ];
+								if( o != undefined ){
+									var x = ( o['x'] / imgW * 100 ) + '%',
+										y = ( o['y'] / imgH * 100 ) + '%';
+									_this.css({ 'top': y, 'left': x });
+									if( o['state'] ) _this.addClass('show');
+									else  _this.removeClass('show');
+								}
 							}
-						}
-				});
+					});
+				}
 			}
+		}
+		
+		function continua(){
+			videoFrame.seekTo( { frame: cPoint['end'] } );
+			setTimeout(function(){
+				video[ 0 ].play();
+			}, 250);
+			callbackDetect({ 'type': 'controlPoint', 'value': 'end' });
+		}
+		
+		function callbackDetect( o ){
+			if( callback != undefined ) callback( o );
 		}
 		
 		init();
 					
 		// PUBLIC FUNC.
+		this.continu = function(){ continua(); };
 		this.adjust = function(){
 		
 		};
@@ -685,19 +707,27 @@ function convertToArr( o ){
 	
 	function Timeline( obj, callback ){
 		
-		var le = MATH.keyCount( section ), rate = 100 / le;
+		var sections = {}, le = MATH.keyCount( section ) - 1, rate = 100 / le, active = 0;
 		
 		function init(){
 			
-			/*if( timeline.length > 0 )
-				timeline.minusDropDown({ openedDelay: 222 });*/
-			
 			initTemplate();
+	
+			// Start
+			var s = new Section( section['start'], function( k ){
+				if( k['type'] == 'controlPoint' ) console.log( k['value']);
+			});
+			$('#startPage .bell').bind('click', function(){
+				s.continu();
+			});
+			
+			/*
 			new Section( section['running'], function( k ){
-				
-				progressBar( k );
-				
-			});		
+				if( k['type'] == 'progress' )
+					progressBar( k['value'] );
+			});
+			*/
+					
 		}
 		
 		
@@ -709,8 +739,7 @@ function convertToArr( o ){
 		}
 		
 		function progressBar( k ){
-			$('.progress', timeline).css({ 'width': ( k / 100 * rate ) + '%' });
-			console.log(  k / 100 * rate );
+			$('.progress', timeline).css({ 'width': ( active * rate ) + ( k / 100 * rate ) + '%' });
 		}
 		
 		init();
@@ -729,8 +758,78 @@ function convertToArr( o ){
 })(window);
 
 
-new Timeline();
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SELECTION
 
+var selection = {
+	arr1: [ {id:0, type:0, name:"running"},
+		{id:1, type:0, name:"boxing"},
+		{id:2, type:0, name:"burpee"},
+		{id:3, type:0, name:"yoga"},
+		{id:4, type:0, name:"dancing"}],
+	arr2: [ {id:5, type:1, name:"coffee"},
+		{id:6, type:1, name:"music"},
+		{id:7, type:1, name:"juice"}],
+	arr3: [],
+	temp: false,
+	generate:function( callback )
+	{	
+		var arr1 = this.arr1, arr2 = this.arr2, arr3 = this.arr3;
+		
+		if (!this.temp){
+			this.temp = arr1.shuffle().slice(0).slice(0, 3);
+		}
+		else
+		{
+			if (arr1.length >= 2 && arr2.length >= 1) {
+				this.temp = arr1.shuffle().slice(0).slice(0, 2);
+				this.temp.push(arr2[Math.floor(Math.random() * arr2.length)]);
+			}
+			else{
+				arr3 = arr1.concat(arr2);
+				this.temp = arr3.shuffle().slice(0).slice(0, 3);
+			}
+		}
+		callback(this.temp.length > 1 ? this.temp : this.temp[0]);
+	},
+	subtract: function( str )
+	{
+		var arr1 = this.arr1, arr2 = this.arr2,
+		    obj = str.split("|"),
+		    array = obj[0] == 0 ? arr1 : arr2;
+		
+		for (var i=0; i<array.length; ++i)
+			if (array[i].id == obj[1])
+				array.splice(i, 1);
+	}
+}
+
+function playselection( str ){
+	selection.subtract( str );		
+}
+
+function generateRandom(){
+	selection.generate(function( array ){
+		if( array.length > 1 ){
+			for( var i=0; i < array.length; ++i )
+				console.log( array[ i ].type, array[ i ].id, array[ i ].name );
+			//'<a href="javascript:playselection('+"'"+ array[i].type +"|"+ array[i].id + "'"+')">'+ array[i].name +'</a>'
+		}
+		else{
+			console.log( array.type, array.id, array.name );
+		}	
+	});
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VIDEO
+/* http://www.webdevdoor.com/html-5/changing-html5-video-javascript-jquery/ */
+function checkVideoType(){
+	if( Modernizr.video ){
+		if( Modernizr.video.webm ) videoType = 'webm';
+		else if( Modernizr.video.ogg ) videoType = 'ogg';
+		else if( Modernizr.video.h264 ) videoType = 'mp4';
+	}else videoType = null;
+}
+checkVideoType();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// RESIZE
 
@@ -778,7 +877,7 @@ function sceneResize(){
 	
 	
 	//
-	$('#mainVideo, #loopVideo, #pointers, .scrupWrapper .controller').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
+	$('#mainVideo, #loopVideo, #pointers, #startPage, .scrupWrapper .controller').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
 	
 	scene.update();	
 }
@@ -809,3 +908,7 @@ var events =
 win.load( events.init );
 win.resize( events.onResize ).resize();
 win.scroll( events.onScroll ).scroll();
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// INIT
+
+new Timeline();

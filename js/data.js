@@ -1,6 +1,27 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// DATA
 var section = {
 	
+	'start': {
+		'main': { 
+			'poster': '', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 879 } 
+		},
+		'selections':{ 
+			'poster': '',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>' 
+		}
+	},
+	
 	'boxing': {},
 	
 	'burpee': {},
@@ -16,13 +37,29 @@ var section = {
 	'juice': {},
 	
 	'running': {
+		'slogan': { 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
 		},
-		'main': { 'src' : 'demo-video/video.mp4', 'poster': '', 'controlPoint': { 'begin': 760, 'end': 879 } },
-		'loop': { 'src' : 'demo-video/loop.mp4', 'poster': '' },
-		'options':{ 'video': 'demo-video/loop.mp4', 'poster': '', 'content': '<h2>BAŞKA NE YAPSAK</h2>' },
+		'main': { 
+			'poster': '', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 879 } 
+		},
+		'selections':{ 
+			'poster': '',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>' 
+		},
 		'scrup': {
 			'small': 'demo-video/sequence/demo-',
 			'medium': 'demo-video/sequence/demo-',
@@ -32,7 +69,7 @@ var section = {
 			'first': 0,
 			'last': 121,
 			'controller': {
-				'slogan': { 'content': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3, 'x': '33%', 'y': '53%' },
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3, 'x': '33%', 'y': '53%' },
 				'x': '62%',
 				'y': '27%',
 				'direction': 'bottom',
