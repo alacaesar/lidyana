@@ -3,7 +3,7 @@ var section = {
 	
 	'start': {
 		'main': { 
-			'poster': '', 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
 			'source':{
 				'mp4': 'demo-video/video.mp4', 
 				'webm': 'demo-video/video.webm',
@@ -12,7 +12,7 @@ var section = {
 			'controlPoint': { 'begin': 0, 'end': 3 } 
 		},
 		'selections':{ 
-			'poster': '',
+			'poster': 'demo-video/sequence/demo-00121.jpg',
 			'source':{
 				'mp4': 'demo-video/loop.mp4', 
 				'webm': 'demo-video/loop.webm',
@@ -43,7 +43,7 @@ var section = {
 			'data':{}	
 		},
 		'main': { 
-			'poster': '', 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
 			'source':{
 				'mp4': 'demo-video/video.mp4', 
 				'webm': 'demo-video/video.webm',
@@ -52,7 +52,7 @@ var section = {
 			'controlPoint': { 'begin': 760, 'end': 879 } 
 		},
 		'selections':{ 
-			'poster': '',
+			'poster': 'demo-video/sequence/demo-00121.jpg',
 			'source':{
 				'mp4': 'demo-video/loop.mp4', 
 				'webm': 'demo-video/loop.webm',

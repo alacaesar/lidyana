@@ -1,7 +1,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = 'mp4';
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -596,10 +596,19 @@ function convertToArr( o ){
 		var scrup = obj['scrup'], loop = $('#loopVideo'), video = $('#mainVideo'), pointers = $('#pointers > a'), videoFrame, frmRate = 30, totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
 			
 		function init(){
+			
+			// Reset Video
+			console.log( videoType );
+			video.get( 0 ).pause();
+			loop.get( 0 ).pause();
+			video.removeAttr('src poster').attr('src', obj['main']['source']['mp4']).attr('poster', obj['main']['poster']);
+			loop.removeAttr('src poster').attr('src', obj['selections']['source']['mp4']).attr('poster', obj['selections']['poster']);
+			video.get( 0 ).load();
+			loop.get( 0 ).load();
+			
 			// Video
 			videoFrame = VideoFrame({ id: 'mainVideo', frameRate: frmRate, callback: function(){ progress( videoFrame.get() ); } });
 			videoFrame.listen('frame');		
-			videoFrame.seekTo( { frame: 730 } );
 			video[ 0 ].addEventListener('loadedmetadata', function(e){ totalFrame = Math.floor( video[ 0 ].duration.toFixed( 5 ) * frmRate ); video[ 0 ].play(); });
 			video.bind('click', function(){
 				if( preview ){
@@ -831,13 +840,31 @@ function generateRandom(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VIDEO
 /* http://www.webdevdoor.com/html-5/changing-html5-video-javascript-jquery/ */
 function checkVideoType(){
+	var k;
 	if( Modernizr.video ){
-		if( Modernizr.video.webm ) videoType = 'webm';
-		else if( Modernizr.video.ogg ) videoType = 'ogg';
-		else if( Modernizr.video.h264 ) videoType = 'mp4';
-	}else videoType = null;
+		if( Modernizr.video.webm ) k = 'webm';
+		else if( Modernizr.video.ogg ) k = 'ogg';
+		else if( Modernizr.video.h264 ) k = 'mp4';
+	}else k = null;
+	
+	return k;
 }
-checkVideoType();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////// CSS CLASS
+
+// cssClass({ 'ID': wrapper, 'delay': 100, 'type': 'add', 'cls':['ready', 'animate'] });
+function cssClass( o, callback ){
+	var ID = o['ID'], k = o['delay'], type = o['type'], cls;
+	if( ID.length > 0 ){
+		if( type == 'add' ){
+			cls = o['cls'] || ['ready', 'animate'];
+			ID.addClass( cls[ 0 ] ).delay( k ).queue('fx', function(){ $( this ).dequeue().addClass( cls[ 1 ] ); if( callback != undefined ) callback(); });
+		}else{
+			cls = o['cls'] || ['animate', 'ready'];
+			ID.removeClass( cls[ 0 ] ).delay( k ).queue('fx', function(){ $( this ).dequeue().removeClass( cls[ 1 ] ); if( callback != undefined ) callback(); });
+		}
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// RESIZE
 
