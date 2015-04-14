@@ -1,0 +1,151 @@
+@font-face {
+	font-family: 'trade';
+	src: url('fonts/tradegothiccondbold-webfont.eot');
+	src: url('fonts/tradegothiccondbold-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('fonts/tradegothiccondbold-webfont.woff') format('woff'),
+		 url('fonts/tradegothiccondbold-webfont.ttf') format('truetype');
+	font-style: normal;
+		font-variant:normal;
+}
+
+body{ background: #000; margin: 0; padding: 0; font-family: 'trade' }
+h3{ padding: 0; margin: 0; }
+a{ text-decoration: none; }
+ul, li{ margin: 0; padding: 0; list-style: none; }
+p{ border: 1px solid blue; padding: 10px; }
+.select{ overflow: hidden; position: relative; text-align: center; display: inline-block; width:130px; height: 20px; padding: 160px 10px 0; }
+.select span{ transition: 0.2s; display: block; margin-top: -10px; opacity: 0; color: #fff; }
+.select:before{ content: ""; display: block; width: 130px; height: 130px; background: url(../assets/music.png) 0px -130px;
+	border-radius: 100px; position: absolute; left: 10px; top: 10px; }
+.select:after{ transition: 0.1s; content: ""; display: block; width: 130px; height:130px; border: 3px solid #fff;
+	border-radius: 100px; position: absolute; left: 7px; top: 7px; }
+.select:hover:after{ width: 144px; height: 144px; left: 0px; top: 0px; border-color: #ffe600; }
+.select:hover:before{ background-position: 0 0; }
+.select:hover span{ margin-top: 0; opacity: 1; }
+.select:active:after{ width: 130px; height: 130px; left: 7px; top: 7px; border-color: #ffe600; }
+
+.bell{ margin: 100px; display: inline-block;width: 60px; height: 60px; position: relative; }
+.bell:before{ content: ""; display: block; width: 34px; height: 34px; background: url(../assets/bell.png); margin: 15px 0 0 13px; }
+.bell:hover:before{ -webkit-animation-duration: .8s; -webkit-animation-name: shakeIt; -webkit-animation-iteration-count: infinite; }
+.bell:after{content: ""; display: block; width: 58px; height: 58px; left: -1px; top: -1px; border: 2px solid #fff; border-radius: 60px;
+	position: absolute; left: 0; top: 0;
+	-webkit-animation-duration: 1.5s; -webkit-animation-name: breath; -webkit-animation-iteration-count: infinite;
+}
+.bell:hover:after{ -webkit-animation-iteration-count: 0; width: 66px; height: 66px; left: -5px; top: -5px; }
+.bell:active:after{ -webkit-animation-iteration-count: 0; width: 58px; height: 58px; left: -1px; top: -1px; }
+
+
+@-webkit-keyframes shakeIt {
+	0% { -webkit-transform: translate(-2px, 0px) rotate(10deg); }
+	10% { -webkit-transform: translate(2px, 0px) rotate(-10deg); }
+	20% { -webkit-transform: translate(-2px, 0px) rotate(10deg); }
+	30% { -webkit-transform: translate(2px, 0px) rotate(-10deg); }
+	40% { -webkit-transform: translate(-2px, 0px) rotate(10deg); }
+	100% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+}
+
+@-webkit-keyframes breath {
+	0% { width: 66px; height: 66px; left: -5px; top: -5px; }
+	15% { width: 56px; height: 56px; left: 1px; top: 1px; }
+	30% { width: 66px; height: 66px; left: -5px; top: -5px; }
+	100% { width: 66px; height: 66px; left: -5px; top: -5px; }
+}
+
+.sidebar{ position: fixed; right: 0; top: 0; }
+.product{ position: relative; width: 430px; height: 230px; background: #fff; border-bottom: 1px solid #ccc; }
+.product:after{ transition: .2s; content: ""; display: block; width: 100%; height: 230px; background: rgba(0, 0, 0, .05); position: absolute; top: 0; left: 0; opacity: 0; }
+.product:hover:after{ opacity: 1; }
+.product_image{ overflow: hidden; float: left; position: relative; width: 155px; height: 230px; border-right: 1px solid #e5e5e5; }
+.product:hover .product_image{ border-right-color:transparent;}
+.product_image img{ width: 100%; position: absolute; transition: .3s; left: 0; top: 0; }
+.product:hover .product_image img{ width: 108%; left: -4%; top: -4%; }
+.product_info{ transition: padding .3s; margin:0 0 0 155px; padding: 30px 30px 0 20px; }
+.product_info a{ display: inline-block; float: left; width:100px; margin-left: 5px; height: 36px; background: #505050; color:#fff; position: relative; border-radius: 3px; line-height: 36px; padding: 0 15px; }
+.product:hover .action{ transition: margin .2s; opacity: 1; margin-left: 0; }
+.product:hover .product_info { padding-left: 30px; }
+.product:hover .product_info ul{ margin-top: 0; }
+.product:hover .product_info a{ transition: .3s; margin-top: 0; }
+.product_info a:hover{ background-color: #222; }
+.product_info ul{ display: inline-block; border:1px solid #ccc; width: 55px; height: 34px; border-radius: 3px; position: relative; z-index: 10; float: left; overflow: hidden; padding: 0 10px; }
+.product_info ul:after{ content: ""; display: block; position: absolute; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 6px solid #aaa; top: 14px; right: 10px; }
+.product_info ul span{ display: block; height: 34px; line-height: 34px; cursor: default; }
+.product_info .action.open { opacity: 1; margin-left: 0; }
+.product_info .action.open ul{ position: absolute; left: -20px; top: -145px; min-height: 230px; width:235px; background: #f2f2f2; border: none; border-radius: 0; padding: 0 20px; }
+.product_info ul li{ display: inline-block; margin:0 0 3px 0; }
+.product_info ul li button{ border:1px solid #ddd; background: #fff; cursor: pointer; width: 50px; height: 30px; }
+.product_info ul li button:disabled{ cursor: auto; background: #eee; }
+.product_info .action{ margin-top: 50px; position: relative; z-index: 10; opacity: 0; margin-left: -15px; }
+
+
+.timeline{
+	transition: height .2s;
+	background: rgba(0, 0, 0, .2); height: 12px; padding-top: 40px;
+	width: 100%; position: fixed; bottom: 0;
+}
+.timeline:hover{ height: 26px; }
+.timeline .inside{
+	width: 90%; max-width: 1100px; height: 100%; margin: 0 auto;
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#d8018c), color-stop(100%,#ffe200));
+	bottom: 0; position: relative;
+}
+.timeline .inside li a{ display: block; transition: .1s; opacity: 0; }
+.timeline .inside ul{ height: 100%; }
+.timeline .inside li{ height: 100%; display: inline-block; float: left; width: 20%; position: relative; }
+.timeline .inside li:after{ transition: .1s; content: ""; height: 8px; width: 8px; border-radius: 4px; background: rgba(0, 0, 0, .2); position: absolute; left: 50%; top: 50%; margin: -4px; display: block; }
+
+.timeline .inside li.watched:after{ background: rgba(0, 0, 0, .4); }
+.timeline .inside li.watched:hover:after{ background: #fff; top: -50px; transition: .4s; }
+.timeline .inside li.watched:hover a{ transition: .3s; opacity: 1; margin-top: -64px; cursor: pointer; }
+.timeline .inside li.watched:hover a img{ margin-top: -50%; }
+.timeline .inside li a img{ transition: .5s; width: 100%; position: absolute; top: 50%; margin-top: -40%; left: 0; }
+.timeline .inside li a{ height: 90px; overflow: hidden; text-align: center; position: relative; }
+.timeline .inside li a b{ position: absolute; top: 45%; width: 100%; left: 0; color: #fff; font-weight: normal; font-size: 13px; letter-spacing: 2px; font-style: italic; }
+
+.timeline .inside .progress{ position: absolute; left: 0; top: 0; width: 46%; height: 100%; background: rgba(0, 0, 0, .2) ; }
+
+.timeline .inside .progress span{ content: ""; width: 12px; height: 0px; display: block; 
+		border-left: 3px solid transparent;
+		border-right: 3px solid transparent;
+		border-bottom: 3px solid rgba(0, 0, 0, .3) ;
+		margin-top: -3px;
+		float: right; margin-right: -9px;
+}
+.timeline .inside .progress span:after{ content: ""; width: 0px; height: 0px; 
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-top: 10px solid #fff;
+		margin-left: 0px;
+		display: block;
+}
+.timeline .inside button{ opacity: .4; cursor: pointer; transition: top .2s; position: absolute; top: -24px; width: 50px; height: 44px; border: none; background: url(../assets/player.png) no-repeat; background-size: 400% 100%; }
+.timeline:hover .inside button{ top: -16px; }
+.timeline .inside button:hover{ opacity: 1; }
+.timeline .inside button.action { left: -50px; background-position: 0 0; }
+.timeline .inside button.action.pause{ background-position: -50px 0; }
+.timeline .inside button.volume { right: -50px; background-position: -100px 0; }
+.timeline .inside button.volume.mute { background-position: -150px 0; }
+
+
+.anchor{ line-height: 50px; margin: -25px 0 0 -25px; width: 50px; height: 50px; display: block; position: relative; }
+.anchor:after{ content: ""; display: block; width: 18px; height: 18px; border: 2px solid #ffe600; border-radius: 20px;
+	position: absolute; left: 14px; top: 14px; transition: .1s;
+}
+.anchor:before{ content: ""; display: block; width: 12px; height: 12px; background: #fff; border-radius: 20px;
+	position: absolute; left: 19px; top: 19px; transition: .1s;
+}
+.anchor:hover:after{ width: 24px; height: 24px; left: 11px; top: 11px; }
+.anchor:hover:before{ width: 14px; height: 14px; left: 18px; top: 18px; }
+.anchor span{ display: none; padding: 0px 50px; font-size: 13px; color: #fff; letter-spacing: 2px; font-style: italic;
+	line-height: 14px; width:220px; vertical-align: middle; }
+.anchor:hover span{ display: inline-block; -webkit-animation: fadeIn .2s; }
+.anchor:active:after{ width: 18px; height: 18px; left: 14px; top: 14px; }
+
+@-webkit-keyframes fadeIn {
+	from { opacity: 0; padding-left: 60px; }
+	to { opacity: 1; padding-left: 50px; }
+}
+
+.button{ transition: .2s; overflow: hidden; margin: 50px; display: inline-block; border: 2px solid #fff; height: 46px; line-height: 46px; color: #fff; border-radius: 8px; padding: 0px 25px; }
+.button span:before{ transition: .2s; content: attr(data-hover); display: block; }
+.button:hover span:before{ margin-top: -46px; }
+.button:hover{ background: rgba(255, 255, 255, .2); }

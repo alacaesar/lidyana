@@ -9,7 +9,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 879 } 
+			'controlPoint': { 'begin': 0, 'end': 3 } 
 		},
 		'selections':{ 
 			'poster': '',
@@ -61,17 +61,29 @@ var section = {
 			'content': '<h2>BAŞKA NE YAPSAK</h2>' 
 		},
 		'scrup': {
-			'small': 'demo-video/sequence/demo-',
-			'medium': 'demo-video/sequence/demo-',
-			'large': 'demo-video/sequence/demo-',
-			'step': 1,
-			'stepMobile': 8,
-			'first': 0,
-			'last': 121,
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
 			'controller': {
 				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3, 'x': '33%', 'y': '53%' },
 				'x': '62%',
 				'y': '27%',
+				'customClass': 'type1',
 				'direction': 'bottom',
 				'controlPoint': .8,
 				'return': true,

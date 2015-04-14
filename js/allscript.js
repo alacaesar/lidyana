@@ -1,7 +1,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, el = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = 'mp4';
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = 'mp4';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -492,7 +492,7 @@ function convertToArr( o ){
 			
 		function init(){
 			
-			var sml = obj['small'], md = obj['medium'], lrg = obj['large'], stp = isMobile ? obj['stepMobile'] : obj['step'], first = obj['first'], last = obj['last'], counter = 0, manifest = [];
+			var type = 'pc', sml = obj[ type ]['small'], md = obj[ type ]['medium'], lrg = obj[ type ]['large'], stp = isMobile ? obj[ type ]['stepMobile'] : obj[ type ]['step'], first = obj[ type ]['first'], last = obj[ type ]['last'], counter = 0, manifest = [];
 			for( var i = first; i <= last; ++i ){
 				
 				if( stp > 1 )
@@ -677,13 +677,21 @@ function convertToArr( o ){
 		function continua(){
 			videoFrame.seekTo( { frame: cPoint['end'] } );
 			setTimeout(function(){
-				video[ 0 ].play();
+				play();
 			}, 250);
 			callbackDetect({ 'type': 'controlPoint', 'value': 'end' });
 		}
 		
 		function callbackDetect( o ){
 			if( callback != undefined ) callback( o );
+		}
+		
+		function play(){
+			video[ 0 ].play();
+		}
+		
+		function pause(){
+			video[ 0 ].pause();
 		}
 		
 		init();
@@ -718,6 +726,7 @@ function convertToArr( o ){
 				if( k['type'] == 'controlPoint' ) console.log( k['value']);
 			});
 			$('#startPage .bell').bind('click', function(){
+				wrapper.removeClass('startingPage');
 				s.continu();
 			});
 			
@@ -727,7 +736,6 @@ function convertToArr( o ){
 					progressBar( k['value'] );
 			});
 			*/
-					
 		}
 		
 		
@@ -771,7 +779,7 @@ var selection = {
 		{id:7, type:1, name:"juice"}],
 	arr3: [],
 	temp: false,
-	generate:function( callback )
+	generate:function(callback)
 	{	
 		var arr1 = this.arr1, arr2 = this.arr2, arr3 = this.arr3;
 		
@@ -791,7 +799,7 @@ var selection = {
 		}
 		callback(this.temp.length > 1 ? this.temp : this.temp[0]);
 	},
-	subtract: function( str )
+	subtract: function(str)
 	{
 		var arr1 = this.arr1, arr2 = this.arr2,
 		    obj = str.split("|"),
