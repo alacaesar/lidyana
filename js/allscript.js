@@ -608,7 +608,8 @@ function convertToArr( o ){
 			
 			// Video
 			videoFrame = VideoFrame({ id: 'mainVideo', frameRate: frmRate, callback: function(){ progress( videoFrame.get() ); } });
-			videoFrame.listen('frame');		
+			videoFrame.listen('frame');
+			videoFrame.seekTo( { frame: 730 } );		
 			video[ 0 ].addEventListener('loadedmetadata', function(e){ totalFrame = Math.floor( video[ 0 ].duration.toFixed( 5 ) * frmRate ); video[ 0 ].play(); });
 			video.bind('click', function(){
 				if( preview ){
@@ -724,27 +725,28 @@ function convertToArr( o ){
 	
 	function Timeline( obj, callback ){
 		
-		var sections = {}, le = MATH.keyCount( section ) - 1, rate = 100 / le, active = 0;
+		var sections = {}, le = MATH.keyCount( section ) - 1, rate = 100 / le, active = 0, current;
 		
 		function init(){
 			
 			initTemplate();
 	
 			// Start
-			var s = new Section( section['start'], function( k ){
+			/*current = new Section( section['start'], function( k ){
 				if( k['type'] == 'controlPoint' ) console.log( k['value']);
 			});
 			$('#startPage .bell').bind('click', function(){
 				wrapper.removeClass('startingPage');
-				s.continu();
+				current.continu();
 			});
+			*/
 			
-			/*
+			wrapper.removeClass('startingPage');
 			new Section( section['running'], function( k ){
 				if( k['type'] == 'progress' )
 					progressBar( k['value'] );
 			});
-			*/
+			
 		}
 		
 		
