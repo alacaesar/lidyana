@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType(), pages = getPages();
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType(), pages = getPages(), timelineObj = null;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -190,6 +190,9 @@ function convertToArr( o ){
 		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, dir = o['direction'] || 'bottom', rate, cPoint = o['controlPoint'] || .9, rtn = o['return'], content = $('#content'), scPoint = null;
 			
 		function init(){
+			
+			// clear
+			if( controller.getNumChildren() > 0 ) controller.removeAllChildren();
 			
 			//
 			resetRate();
@@ -658,7 +661,13 @@ function convertToArr( o ){
 			
 			// selections
 			loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': obj['selections'] });
-			generateRandom();
+			selection.generate(function( array ){
+				if( array.length > 1 ){	
+					$('.selections .content').html( getTemplates( array ) + ( obj['selections']['content'] || '' ) );	
+				}else{
+					// nothing
+				}
+			});
 			
 			// Main Video
 			video = new Video({ 'id': 'mainVideo', 'el': $('#mainVideo'), 'video': obj['main'] }, function( k ){
@@ -810,9 +819,24 @@ function convertToArr( o ){
 			$('.progress', timeline).css({ 'width': ( active * rate ) + ( k / 100 * rate ) + '%' });
 		}
 		
+		function clear(){
+			wrapper.removeClass('scrup selectionPage');
+		}
+		
 		init();
 					
 		// PUBLIC FUNC.
+		this.loadSection = function( k ){
+			if( section[ k ] ){
+				active++;
+				clear();
+				current = new Section( section[ k ], function( o ){
+					if( o['type'] == 'progress' )
+						progressBar( o['value'] );
+				});
+			}
+		}
+		
 		this.adjust = function(){
 		
 		};
@@ -872,23 +896,16 @@ var selection = {
 }
 
 function playselection( str ){
-	selection.subtract( str );		
+	selection.subtract( str );
+	timelineObj.loadSection('running');	
 }
 
-function generateRandom(){
-	selection.generate(function( array ){
-		if( array.length > 1 ){
-			var k = '<ul class="selectionList">';
-			for( var i = 0; i < array.length; ++i )	
-				k += '<li><a class="select" href="javascript:playselection('+"'"+ array[ i ].type +"|"+ array[ i ].id + "'"+')">'+ array[ i ].name +'</a></li>';
-				k += '</ul>';
-			
-			$('.selections .content').html( k );	
-		}
-		else{
-			console.log( array.type, array.id, array.name );
-		}	
-	});
+function getTemplates( array ){
+	var html = '<ul class="selectionList">';
+	for( var i = 0; i < array.length; ++i )	
+		html += '<li><a class="select" href="javascript:playselection('+"'"+ array[ i ].type +"|"+ array[ i ].id + "'"+')">'+ array[ i ].name +'</a></li>';
+		html += '</ul>';
+	return html;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VIDEO
@@ -1008,4 +1025,4 @@ win.scroll( events.onScroll ).scroll();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// INIT
 
-new Timeline();
+timelineObj = new Timeline();
