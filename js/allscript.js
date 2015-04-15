@@ -1,4 +1,3 @@
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
 var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType();
@@ -217,7 +216,7 @@ function convertToArr( o ){
 			var obj = o['content'];
 			if( obj ){
 				scPoint = obj['controlPoint'];
-				content.html( obj['html'] ).removeAttr('class').addClass( obj['customClass'] ).css({ 'left': obj['x'], 'top': obj['y'] });
+				content.html( obj['html'] ).removeAttr('class').addClass( obj['customClass'] );
 			}else{
 				content.addClass('hidden');
 			}

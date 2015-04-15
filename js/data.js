@@ -2,6 +2,7 @@
 var section = {
 	
 	'start': {
+		'customClass': 'startPage',		
 		'main': { 
 			'poster': 'demo-video/sequence/demo-00000.jpg', 
 			'source':{
@@ -23,21 +24,36 @@ var section = {
 		}
 	},
 	
-	'boxing': {},
+	'boxing': {
+		'customClass': 'boxingPage',	
+	},
 	
-	'burpee': {},
+	'burpee': {
+		'customClass': 'burpeePage',	
+	},
 	
-	'yoga': {},
+	'yoga': {
+		'customClass': 'yogaPage',
+	},
 	
-	'dancing': {},
+	'dancing': {
+		'customClass': 'dancingPage',
+	},
 	
-	'coffee': {},
+	'coffee': {
+		'customClass': 'coffeePage',
+	},
 	
-	'music': {},
+	'music': {
+		'customClass': 'musicPage',
+	},
 	
-	'juice': {},
+	'juice': {
+		'customClass': 'juicePage',
+	},
 	
 	'running': {
+		'customClass': 'runningPage',
 		'slogan': { 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
@@ -82,10 +98,7 @@ var section = {
 				'last': 121
 			},
 			'controller': {
-				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3, 'x': '33%', 'y': '53%' },
-				'x': '62%',
-				'y': '27%',
-				'customClass': 'type1',
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
 				'direction': 'bottom',
 				'controlPoint': .8,
 				'return': false,
