@@ -587,37 +587,76 @@ function convertToArr( o ){
 })(window);
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VIDEO
+
+(function(window){
+	
+	function Video( obj, callback ){
+		
+		var el = obj['el'], videoFrame, frmRate = 30, preview = true;
+		
+		function init(){
+			
+			console.log( videoType );
+			el.get( 0 ).pause();
+			el.removeAttr('src poster').attr('src', obj['video']['source']['mp4']).attr('poster', obj['video']['poster']);
+			el.get( 0 ).load();
+			
+			videoFrame = VideoFrame({ id: obj['id'], frameRate: frmRate, callback: function(){ callbackDetect({ 'type': 'frame', 'value': videoFrame.get() }); } });
+			videoFrame.listen('frame');
+			videoFrame.seekTo( { frame: 730 } );	
+			
+			el[ 0 ].addEventListener('loadedmetadata', function(e){ callbackDetect({ 'type': 'loaded', 'value': Math.floor( el[ 0 ].duration.toFixed( 5 ) * frmRate ) }); });
+			el.bind('click', function(){
+				if( preview ){
+					preview = false;
+					el[ 0 ].pause();
+				}else{
+					preview = true;
+					el[ 0 ].play();
+				} 
+			});
+		}
+		
+		function callbackDetect( k ){
+			if( callback != undefined )
+				callback( k );
+		}
+		
+		init();
+		
+		/* GLOBAL */
+		this.play = function(){
+			el[ 0 ].play();
+		};
+		this.pause = function(){
+			el[ 0 ].pause();
+		};
+		this.seekto = function( k ){
+			videoFrame.seekTo( { frame: k } );
+		};
+	};
+	
+	window.Video = Video;
+	
+})(window);
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SECTION
 
 (function(window){
 	
 	function Section( obj, callback ){
 		
-		var scrup = obj['scrup'], loop = $('#loopVideo'), video = $('#mainVideo'), pointers = $('#pointers > a'), videoFrame, frmRate = 30, totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
+		var scrup = obj['scrup'], loop, video, pointers = $('#pointers > a'), totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
 			
 		function init(){
 			
-			// Reset Video
-			console.log( videoType );
-			video.get( 0 ).pause();
-			loop.get( 0 ).pause();
-			video.removeAttr('src poster').attr('src', obj['main']['source']['mp4']).attr('poster', obj['main']['poster']);
-			loop.removeAttr('src poster').attr('src', obj['selections']['source']['mp4']).attr('poster', obj['selections']['poster']);
-			video.get( 0 ).load();
-			loop.get( 0 ).load();
-			
-			// Video
-			videoFrame = VideoFrame({ id: 'mainVideo', frameRate: frmRate, callback: function(){ progress( videoFrame.get() ); } });
-			videoFrame.listen('frame');
-			videoFrame.seekTo( { frame: 730 } );		
-			video[ 0 ].addEventListener('loadedmetadata', function(e){ totalFrame = Math.floor( video[ 0 ].duration.toFixed( 5 ) * frmRate ); video[ 0 ].play(); });
-			video.bind('click', function(){
-				if( preview ){
-					preview = false;
-					video[0].pause();
-				}else{
-					preview = true;
-					video[0].play();
+			loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': obj['selections'] });
+			video = new Video({ 'id': 'mainVideo', 'el': $('#mainVideo'), 'video': obj['main'] }, function( k ){
+				if( k['type'] == 'frame' ) progress( k['value'] );
+				else if( k['type'] == 'loaded' ){
+					totalFrame = k['value'];
+					video.play();
 				}
 			});
 			
@@ -648,15 +687,15 @@ function convertToArr( o ){
 			
 			// scrup
 			if( k >= cPoint['begin'] - 2 && k <= cPoint['begin'] + 2 ){
-				video[ 0 ].pause();
+				video.pause();
 				if( scrup ) $('.scene').addClass('scrup');
 				callbackDetect({ 'type': 'controlPoint', 'value': 'begin' });
 			}
 
 			// loop
 			if(  k >= totalFrame - 2 ){
-				video[ 0 ].pause();
-				loop[ 0 ].play();
+				video.pause();
+				loop.play();
 				$('.scene').removeClass('scrup').addClass('loop');
 				callbackDetect({ 'type': 'selections' });
 			}
@@ -685,7 +724,7 @@ function convertToArr( o ){
 		}
 		
 		function continua(){
-			videoFrame.seekTo( { frame: cPoint['end'] } );
+			video.seekto( cPoint['end'] );
 			setTimeout(function(){
 				play();
 			}, 250);
@@ -697,11 +736,11 @@ function convertToArr( o ){
 		}
 		
 		function play(){
-			video[ 0 ].play();
+			video.play();
 		}
 		
 		function pause(){
-			video[ 0 ].pause();
+			video.pause();
 		}
 		
 		init();
@@ -721,6 +760,7 @@ function convertToArr( o ){
 })(window);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// TIMELINE
+
 (function(window){
 	
 	function Timeline( obj, callback ){
@@ -740,6 +780,7 @@ function convertToArr( o ){
 				current.continu();
 			});
 			*/
+			
 			
 			wrapper.removeClass('startingPage');
 			new Section( section['running'], function( k ){
