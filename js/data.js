@@ -18,7 +18,8 @@ var section = {
 				'webm': 'demo-video/loop.webm',
 				'ogg': 'demo-video/loop.ogg',
 			},
-			'content': '<h2>BAŞKA NE YAPSAK</h2>' 
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
 		}
 	},
 	
@@ -49,7 +50,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 879 } 
+			'controlPoint': { 'begin': 760, 'end': 2400 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -58,7 +59,8 @@ var section = {
 				'webm': 'demo-video/loop.webm',
 				'ogg': 'demo-video/loop.ogg',
 			},
-			'content': '<h2>BAŞKA NE YAPSAK</h2>' 
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
 		},
 		'scrup': {
 			'pc':{
@@ -86,7 +88,7 @@ var section = {
 				'customClass': 'type1',
 				'direction': 'bottom',
 				'controlPoint': .8,
-				'return': true,
+				'return': false,
 				'path':
 				{
 					'd': 'M19,19.5c0,0,114,63,107.5,308.5',

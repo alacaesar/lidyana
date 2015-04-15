@@ -332,7 +332,7 @@ function convertToArr( o ){
 			});
 			
 			el.on('pressup', function( evt ){
-				if( rtn ) checkControlPoint( el, rate );
+				checkControlPoint( el, rate );
 				this.getChildByName('normal').alpha = 1;
 				this.getChildByName('hover').alpha = 0;
 			});
@@ -372,7 +372,10 @@ function convertToArr( o ){
 				if( rate >= r ) k = 1;
 				else k = 0;
 			}
-		
+			
+			
+			if( !rtn && k == 1 ) return false;
+			
 			createjs
 			.Tween
 			.get( _this )
@@ -651,7 +654,11 @@ function convertToArr( o ){
 			
 		function init(){
 			
+			// selections
 			loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': obj['selections'] });
+			generateRandom();
+			
+			// Main Video
 			video = new Video({ 'id': 'mainVideo', 'el': $('#mainVideo'), 'video': obj['main'] }, function( k ){
 				if( k['type'] == 'frame' ) progress( k['value'] );
 				else if( k['type'] == 'loaded' ){
@@ -666,7 +673,7 @@ function convertToArr( o ){
 					var rate = k['rate'], dir = scrup['controller']['direction'], k = 0;
 					if( dir == 'top' || dir == 'left' ) k = 1;
 					if( rate == k ){
-						$('.scene').removeClass('scrup');
+						wrapper.removeClass('scrup');
 						continua();
 					}
 				});	
@@ -688,7 +695,7 @@ function convertToArr( o ){
 			// scrup
 			if( k >= cPoint['begin'] - 2 && k <= cPoint['begin'] + 2 ){
 				video.pause();
-				if( scrup ) $('.scene').addClass('scrup');
+				if( scrup ) wrapper.addClass('scrup');
 				callbackDetect({ 'type': 'controlPoint', 'value': 'begin' });
 			}
 
@@ -696,7 +703,7 @@ function convertToArr( o ){
 			if(  k >= totalFrame - 2 ){
 				video.pause();
 				loop.play();
-				$('.scene').removeClass('scrup').addClass('loop');
+				wrapper.removeClass('scrup').addClass('selectionPage');
 				callbackDetect({ 'type': 'selections' });
 			}
 			
@@ -731,10 +738,6 @@ function convertToArr( o ){
 			callbackDetect({ 'type': 'controlPoint', 'value': 'end' });
 		}
 		
-		function callbackDetect( o ){
-			if( callback != undefined ) callback( o );
-		}
-		
 		function play(){
 			video.play();
 		}
@@ -743,6 +746,10 @@ function convertToArr( o ){
 			video.pause();
 		}
 		
+		function callbackDetect( o ){
+			if( callback != undefined ) callback( o );
+		}
+
 		init();
 					
 		// PUBLIC FUNC.
@@ -780,7 +787,6 @@ function convertToArr( o ){
 				current.continu();
 			});
 			*/
-			
 			
 			wrapper.removeClass('startingPage');
 			new Section( section['running'], function( k ){
@@ -870,9 +876,12 @@ function playselection( str ){
 function generateRandom(){
 	selection.generate(function( array ){
 		if( array.length > 1 ){
-			for( var i=0; i < array.length; ++i )
-				console.log( array[ i ].type, array[ i ].id, array[ i ].name );
-			//'<a href="javascript:playselection('+"'"+ array[i].type +"|"+ array[i].id + "'"+')">'+ array[i].name +'</a>'
+			var k = '<ul class="selectionList">';
+			for( var i = 0; i < array.length; ++i )	
+				k += '<li><a class="select" href="javascript:playselection('+"'"+ array[ i ].type +"|"+ array[ i ].id + "'"+')">'+ array[ i ].name +'</a></li>';
+				k += '</ul>';
+			
+			$('.selections .content').html( k );	
 		}
 		else{
 			console.log( array.type, array.id, array.name );
@@ -951,11 +960,8 @@ function sceneResize(){
 	container.scaleX = wRatio / imgW;
 	container.scaleY = hRatio / imgH;
 	
-	
-	
-	
 	//
-	$('#mainVideo, #loopVideo, #pointers, #startPage, .scrupWrapper .controller').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
+	$('#mainVideo, #loopVideo, #pointers, #startPage, .scrupWrapper .controller, .selections .content').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
 	
 	scene.update();	
 }
