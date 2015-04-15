@@ -66,7 +66,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2400 } 
+			'controlPoint': { 'begin': 760, 'end': 2450 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',

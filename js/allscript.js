@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType();
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType(), pages = getPages();
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -599,7 +599,7 @@ function convertToArr( o ){
 		
 		function init(){
 			
-			console.log( videoType );
+			//console.log( videoType );
 			el.get( 0 ).pause();
 			el.removeAttr('src poster').attr('src', obj['video']['source']['mp4']).attr('poster', obj['video']['poster']);
 			el.get( 0 ).load();
@@ -652,6 +652,9 @@ function convertToArr( o ){
 		var scrup = obj['scrup'], loop, video, pointers = $('#pointers > a'), totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
 			
 		function init(){
+			
+			// pageType
+			wrapper.removeClass( pages ).addClass( obj['customClass'] );
 			
 			// selections
 			loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': obj['selections'] });
@@ -915,6 +918,17 @@ function cssClass( o, callback ){
 			ID.removeClass( cls[ 0 ] ).delay( k ).queue('fx', function(){ $( this ).dequeue().removeClass( cls[ 1 ] ); if( callback != undefined ) callback(); });
 		}
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////// GET PAGES
+function getPages(){
+	var a = [];
+	$.each(section, function( i, k ){
+		if( k['customClass'] ){
+			a.push( k['customClass'] );
+		}
+	});
+	return a.toString().replace(/,/g, ' ');
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// RESIZE
