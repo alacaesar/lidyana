@@ -734,6 +734,14 @@ function convertToArr( o ){
 			// selections		
 			if(  k >= totalFrame - 2 && k <= totalFrame + 2 && state['selections'] ){
 				state['selections'] = false;
+				
+				// son eleman kontrol
+				if( lastSelections != null ){
+					timelineObj.loadSection( lastSelections );
+					return false;
+				}
+				
+				//
 				if( loop != null ){
 					pause();
 					loop.play();
@@ -742,6 +750,8 @@ function convertToArr( o ){
 				}else{
 					callbackDetect({ 'type': 'notSelections' });
 				}
+				
+				
 			}
 			
 		}
