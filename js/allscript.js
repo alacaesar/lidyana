@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType(), pages = getPages(), timelineObj = null;
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType(), pages = getPages(), timelineObj = null, lastSelections = null;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -610,11 +610,6 @@ function convertToArr( o ){
 			el.get( 0 ).pause();
 			el.removeAttr('src poster').attr('src', obj['video']['source']['mp4']).attr('poster', obj['video']['poster']);
 			el.get( 0 ).load();
-			
-			videoFrame = VideoFrame({ id: obj['id'], frameRate: frmRate, callback: function(){ callbackDetect({ 'type': 'frame', 'value': videoFrame.get() }); } });
-			videoFrame.listen('frame');
-			videoFrame.seekTo( { frame: 730 } );	
-			
 			el[ 0 ].addEventListener('loadedmetadata', onLoadedmetadata);
 			el.unbind('click').bind('click', function(){
 				if( preview ){
@@ -630,6 +625,10 @@ function convertToArr( o ){
 		function onLoadedmetadata( e ){
 			callbackDetect({ 'type': 'loaded', 'value': Math.floor( el[ 0 ].duration.toFixed( 5 ) * frmRate ) });
 			el[ 0 ].removeEventListener('loadedmetadata', onLoadedmetadata, false);
+
+			videoFrame = VideoFrame({ id: obj['id'], frameRate: frmRate, callback: function(){ callbackDetect({ 'type': 'frame', 'value': videoFrame.get() }); } });
+			videoFrame.listen('frame');
+			videoFrame.seekTo( { frame: 730 } );			
 		}
 		
 		function callbackDetect( k ){
@@ -665,7 +664,7 @@ function convertToArr( o ){
 	
 	function Section( obj, callback ){
 		
-		var scrups, scrup = obj['scrup'] || null, loop, video, pointers = $('#pointers > a'), totalFrame = 0, slc = obj['selections'] || null, mn = obj['main'] || null, cPoint = mn != null ? mn['controlPoint'] : null, preview = true;
+		var scrups, scrup = obj['scrup'] || null, loop = null, video = null, pointers = $('#pointers > a'), totalFrame = 0, slc = obj['selections'] || null, mn = obj['main'] || null, cPoint = mn != null ? mn['controlPoint'] : null, preview = true, state = { 'scrup': true, 'selections': true };
 			
 		function init(){
 			
@@ -673,13 +672,17 @@ function convertToArr( o ){
 			wrapper.removeClass( pages ).addClass( obj['customClass'] );
 			
 			// selections
-			if( slc ){
+			if( slc && obj['watched'] == undefined ){
 				loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': slc });
 				selection.generate(function( array ){
 					if( array.length > 1 ){	
 						$('.selections .content').html( getTemplates( array ) + ( slc['content'] || '' ) );	
 					}else{
 						// nothing
+						console.log('sonn......', array.name);
+						obj['watched'] = true;
+						lastSelections = array.name;
+						/*timelineObj.loadSection( array.name );*/
 					}
 				});
 			}
@@ -687,10 +690,10 @@ function convertToArr( o ){
 			// Main Video
 			if( mn ){
 				video = new Video({ 'id': 'mainVideo', 'el': $('#mainVideo'), 'video': mn }, function( k ){
-					if( k['type'] == 'frame' ) progress( k['value'] );
+					if( k['type'] == 'frame' ) progress( k['value'] ); 
 					else if( k['type'] == 'loaded' ){
 						totalFrame = k['value'];
-						if( video ) video.play();
+						callbackDetect( { 'type': 'loaded', 'value': totalFrame } );
 					}
 				});
 			}
@@ -721,18 +724,24 @@ function convertToArr( o ){
 		function controlPoint( k ){
 			
 			// scrup
-			if( k >= cPoint['begin'] - 2 && k <= cPoint['begin'] + 2 ){
-				video.pause();
-				if( scrup ) wrapper.addClass('scrup');
+			if( k >= cPoint['begin'] - 2 && k <= cPoint['begin'] + 2 && state['scrup'] ){
+				state['scrup'] = false;
+				pause();
+				if( scrup != null ) wrapper.addClass('scrup');
 				callbackDetect({ 'type': 'controlPoint', 'value': 'begin' });
 			}
 
-			// loop
-			if(  k >= totalFrame - 2 ){
-				video.pause();
-				loop.play();
-				wrapper.removeClass('scrup').addClass('selectionPage');
-				callbackDetect({ 'type': 'selections' });
+			// selections		
+			if(  k >= totalFrame - 2 && k <= totalFrame + 2 && state['selections'] ){
+				state['selections'] = false;
+				if( loop != null ){
+					pause();
+					loop.play();
+					wrapper.removeClass('scrup').addClass('selectionPage');
+					callbackDetect({ 'type': 'selections' });
+				}else{
+					callbackDetect({ 'type': 'notSelections' });
+				}
 			}
 			
 		}
@@ -767,11 +776,11 @@ function convertToArr( o ){
 		}
 		
 		function play(){
-			video.play();
+			if( video ) video.play();
 		}
 		
 		function pause(){
-			video.pause();
+			if( video ) video.pause();
 		}
 		
 		function callbackDetect( o ){
@@ -781,15 +790,17 @@ function convertToArr( o ){
 		init();
 					
 		// PUBLIC FUNC.
+		this.play = function(){ play(); };
+		this.pause = function(){ pause(); };
 		this.continu = function(){ continua(); };
 		this.adjust = function(){
 		
 		};
 		this.destroy = function(){
-			if( loop ) loop.destroy();
-			if( video ) video.destroy();
-			if( scrups ) scrups.destroy();
-			mn = slc = scrups = scrup = loop = video = pointers = totalFrame = cPoint = preview = undefined;
+			if( loop != null ) loop.destroy();
+			if( video != null ) video.destroy();
+			if( scrups != null ) scrups.destroy();
+			mn = slc = scrups = scrup = loop = video = pointers = totalFrame = cPoint = preview = state = undefined;
 		};
 	};
 	
@@ -816,6 +827,7 @@ function convertToArr( o ){
 			});
 			$('#startPage .bell').bind('click', function(){
 				wrapper.removeClass('startingPage');
+				//current.play();
 				current.continu();
 			});
 			
@@ -845,7 +857,7 @@ function convertToArr( o ){
 			
 			if( section[ k ] ){
 				
-				if( sections[ k ] ){
+				if( sections[ k ] != undefined && sections[ k ] != null ){
 					active = sections[ k ];
 				}else{
 					active++;
@@ -855,12 +867,24 @@ function convertToArr( o ){
 					$('ul li:eq('+ active +')', timeline).addClass('watched').append( getTimelineTemplates( k ) );
 				}
 				
+				console.log( sections );
+				
+				//selection control
+				var el = $('ul li:eq('+ active +')', timeline).next();
+				if( el.hasClass('watched') ){
+					section[ k ]['watched'] = true;
+				}
+				
+				//
 				clear();			
 				current = new Section( section[ k ], function( o ){
-					if( o['type'] == 'progress' )
-						progressBar( o['value'] );
+					if( o['type'] == 'loaded' ) current.play();
+					else if( o['type'] == 'progress' ) progressBar( o['value'] );
+					else if( o['type'] == 'notSelections' ){
+						// bir sonraki section tıklattırılır
+						$('ul li:eq('+ active +')', timeline).next().find('a').click();
+					}
 				});
-				
 			}
 		}
 		
@@ -877,8 +901,8 @@ function convertToArr( o ){
 })(window);
 
 function getTimelineTemplates( k ){
-	var tmp = '<a onclick="javascript:void(0)"><img src="{{sectionImage}}" /><b>{{sectionName}}</b></a>', o = section[ k ];
-		return tmp.replace(/{{sectionImage}}/g, o['info']['poster'] ).replace(/{{sectionName}}/g, o['info']['title'] );
+	var tmp = '<a rel="{{section}}" onclick="setSection( this );" href="javascript:void(0)"><img src="{{sectionImage}}" /><b>{{sectionName}}</b></a>', o = section[ k ];
+		return tmp.replace(/{{section}}/g, k ).replace(/{{sectionImage}}/g, o['info']['poster'] ).replace(/{{sectionName}}/g, o['info']['title'] );
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SELECTION
@@ -928,6 +952,12 @@ var selection = {
 
 function playselection( str, _t ){
 	selection.subtract( str );
+	var _this = $( _t ), rel = _this.attr('rel');
+	if( rel != undefined && rel != null && rel != '' )
+		timelineObj.loadSection( rel );	
+}
+
+function setSection( _t ){
 	var _this = $( _t ), rel = _this.attr('rel');
 	if( rel != undefined && rel != null && rel != '' )
 		timelineObj.loadSection( rel );	
@@ -1014,8 +1044,6 @@ function sceneResize(){
 		hRatio = wt / ratio;
 	}
 
-	
-	
 	canvas.attr( 'width', wt ).attr( 'height', ht );
 	
 	container.x = Math.round( ( wt - wRatio ) * .5 );
@@ -1027,6 +1055,12 @@ function sceneResize(){
 	$('#mainVideo, #loopVideo, #pointers, #startPage, .scrupWrapper .controller, .selections .content').css({ 'left': Math.round( ( wt - wRatio ) * .5 ), 'top': Math.round( ( ht - hRatio ) * .5 ), 'width': wRatio, 'height': hRatio });
 	
 	scene.update();	
+	
+	/* transform 
+	var zoom = Math.min( wRatio / imgW, hRatio / imgH );
+	if( zoom < 1 ) $('.slogan').css({'transform': 'scale(' + zoom + ')'});
+	else if( zoom >= 1 ) $('.slogan').css({'transform': ''});
+	*/
 }
 
 

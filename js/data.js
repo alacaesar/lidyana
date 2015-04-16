@@ -26,7 +26,7 @@ var section = {
 	
 	'boxing': {
 		'customClass': 'boxingPage',	
-		'info': { 'title': 'BOXING', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'BOXING', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -95,7 +95,7 @@ var section = {
 	
 	'burpee': {
 		'customClass': 'burpeePage',	
-		'info': { 'title': 'BURPEE', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'BURPEE', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -164,7 +164,7 @@ var section = {
 	
 	'yoga': {
 		'customClass': 'yogaPage',
-		'info': { 'title': 'YOGA', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'YOGA', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -233,7 +233,7 @@ var section = {
 	
 	'dancing': {
 		'customClass': 'dancingPage',
-		'info': { 'title': 'DANCING', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] },  
+		'info': { 'title': 'DANCING', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] },  
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -302,7 +302,7 @@ var section = {
 	
 	'coffee': {
 		'customClass': 'coffeePage',
-		'info': { 'title': 'COFFEE', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'COFFEE', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -371,7 +371,7 @@ var section = {
 	
 	'music': {
 		'customClass': 'musicPage',
-		'info': { 'title': 'MUSIC', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'MUSIC', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -440,7 +440,7 @@ var section = {
 	
 	'juice': {
 		'customClass': 'juicePage',
-		'info': { 'title': 'JUICE', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'JUICE', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -509,7 +509,7 @@ var section = {
 	
 	'running': {
 		'customClass': 'runningPage',
-		'info': { 'title': 'RUNNING', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'RUNNING', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
