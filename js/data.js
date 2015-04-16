@@ -26,35 +26,490 @@ var section = {
 	
 	'boxing': {
 		'customClass': 'boxingPage',	
+		'info': { 'title': 'BOXING', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'cue-point': {
+			'pointers': [],
+			'data':{}	
+		},
+		'main': { 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
+		},
+		'selections':{ 
+			'poster': 'demo-video/sequence/demo-00121.jpg',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
+		},
+		'scrup': {
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'controller': {
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
+				'direction': 'bottom',
+				'controlPoint': .8,
+				'return': false,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
+					'opacity': .5
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
+				]
+			}
+		}
 	},
 	
 	'burpee': {
 		'customClass': 'burpeePage',	
+		'info': { 'title': 'BURPEE', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'cue-point': {
+			'pointers': [],
+			'data':{}	
+		},
+		'main': { 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
+		},
+		'selections':{ 
+			'poster': 'demo-video/sequence/demo-00121.jpg',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
+		},
+		'scrup': {
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'controller': {
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
+				'direction': 'bottom',
+				'controlPoint': .8,
+				'return': false,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
+					'opacity': .5
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
+				]
+			}
+		}
 	},
 	
 	'yoga': {
 		'customClass': 'yogaPage',
+		'info': { 'title': 'YOGA', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] }, 
+		'cue-point': {
+			'pointers': [],
+			'data':{}	
+		},
+		'main': { 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
+		},
+		'selections':{ 
+			'poster': 'demo-video/sequence/demo-00121.jpg',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
+		},
+		'scrup': {
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'controller': {
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
+				'direction': 'bottom',
+				'controlPoint': .8,
+				'return': false,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
+					'opacity': .5
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
+				]
+			}
+		}
 	},
 	
 	'dancing': {
 		'customClass': 'dancingPage',
+		'info': { 'title': 'DANCING', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] },  
+		'cue-point': {
+			'pointers': [],
+			'data':{}	
+		},
+		'main': { 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
+		},
+		'selections':{ 
+			'poster': 'demo-video/sequence/demo-00121.jpg',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
+		},
+		'scrup': {
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'controller': {
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
+				'direction': 'bottom',
+				'controlPoint': .8,
+				'return': false,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
+					'opacity': .5
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
+				]
+			}
+		}
 	},
 	
 	'coffee': {
 		'customClass': 'coffeePage',
+		'info': { 'title': 'COFFEE', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] }, 
+		'cue-point': {
+			'pointers': [],
+			'data':{}	
+		},
+		'main': { 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
+		},
+		'selections':{ 
+			'poster': 'demo-video/sequence/demo-00121.jpg',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
+		},
+		'scrup': {
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'controller': {
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
+				'direction': 'bottom',
+				'controlPoint': .8,
+				'return': false,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
+					'opacity': .5
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
+				]
+			}
+		}
 	},
 	
 	'music': {
 		'customClass': 'musicPage',
+		'info': { 'title': 'MUSIC', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'cue-point': {
+			'pointers': [],
+			'data':{}	
+		},
+		'main': { 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
+		},
+		'selections':{ 
+			'poster': 'demo-video/sequence/demo-00121.jpg',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
+		},
+		'scrup': {
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'controller': {
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
+				'direction': 'bottom',
+				'controlPoint': .8,
+				'return': false,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
+					'opacity': .5
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
+				]
+			}
+		}
 	},
 	
 	'juice': {
 		'customClass': 'juicePage',
+		'info': { 'title': 'JUICE', 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'cue-point': {
+			'pointers': [],
+			'data':{}	
+		},
+		'main': { 
+			'poster': 'demo-video/sequence/demo-00000.jpg', 
+			'source':{
+				'mp4': 'demo-video/video.mp4', 
+				'webm': 'demo-video/video.webm',
+				'ogg': 'demo-video/video.ogg',
+			},
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
+		},
+		'selections':{ 
+			'poster': 'demo-video/sequence/demo-00121.jpg',
+			'source':{
+				'mp4': 'demo-video/loop.mp4', 
+				'webm': 'demo-video/loop.webm',
+				'ogg': 'demo-video/loop.ogg',
+			},
+			'content': '<h2>BAŞKA NE YAPSAK</h2>',
+			'customClass': 'type1' 
+		},
+		'scrup': {
+			'pc':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'mobile':{
+				'small': 'demo-video/sequence/demo-',
+				'medium': 'demo-video/sequence/demo-',
+				'large': 'demo-video/sequence/demo-',
+				'step': 1,
+				'stepMobile': 8,
+				'first': 0,
+				'last': 121
+			},
+			'controller': {
+				'content': { 'html': 'KALKMASINA DESTEK OL<small>Oku çek</small>', 'customClass': 'type1', 'controlPoint': .3 },
+				'direction': 'bottom',
+				'controlPoint': .8,
+				'return': false,
+				'path':
+				{
+					'd': 'M19,19.5c0,0,114,63,107.5,308.5',
+					//'d': 'M77.7,347.3c0-110.5,89.5-200,200-200',
+					'color': '#FFFFFF',
+					'style': '2',
+					'dash': { 'segment': [ 10, 8 ], 'offset': 8 },
+					'opacity': .5
+				},
+				'manifest':[
+					{ 'id': 'start', 'src': 'frontend/drgPoint.png', 'opacity': 0 },
+					{ 'id': 'end', 'src': 'frontend/drgPoint.png', 'opacity': .5 },
+					{ 'id': 'drag1', 'src': 'frontend/drgSngArw.png', 'opacity': 1  },
+					{ 'id': 'drag2', 'src': 'frontend/drgDbArw.png', 'opacity': 0  }
+				]
+			}
+		}
 	},
 	
 	'running': {
 		'customClass': 'runningPage',
-		'slogan': { 'poster': 'content/section.jpg', 'id':[ 1, 5, 9 ] }, 
+		'info': { 'title': 'RUNNING', 'poster': 'content/section2.jpg', 'id':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	

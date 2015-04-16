@@ -803,13 +803,14 @@ function convertToArr( o ){
 	
 	function Timeline( obj, callback ){
 		
-		var sections = {}, le = MATH.keyCount( section ) - 1, rate = 100 / le, active = 0, current;
+		var sections = {}, le = MATH.keyCount( section ) - 1, rate = 100 / le, active = -1, current;
 		
 		function init(){
 			
+			//
 			initTemplate();
 	
-			// Start
+			// Starting Page
 			current = new Section( section['start'], function( k ){
 				if( k['type'] == 'controlPoint' ) console.log( k['value']);
 			});
@@ -818,13 +819,6 @@ function convertToArr( o ){
 				current.continu();
 			});
 			
-			
-			/*wrapper.removeClass('startingPage');
-			current = new Section( section['running'], function( k ){
-				if( k['type'] == 'progress' )
-					progressBar( k['value'] );
-			});
-			*/
 		}
 		
 		
@@ -848,16 +842,19 @@ function convertToArr( o ){
 					
 		// PUBLIC FUNC.
 		this.loadSection = function( k ){
-			console.log(k);
+			
 			if( section[ k ] ){
 				
 				if( sections[ k ] ){
 					active = sections[ k ];
 				}else{
-					sections[ k ] = active;
 					active++;
+					sections[ k ] = active;
+					
+					// timeline 
+					$('ul li:eq('+ active +')', timeline).addClass('watched').append( getTimelineTemplates( k ) );
 				}
-	
+				
 				clear();			
 				current = new Section( section[ k ], function( o ){
 					if( o['type'] == 'progress' )
@@ -879,6 +876,10 @@ function convertToArr( o ){
 	
 })(window);
 
+function getTimelineTemplates( k ){
+	var tmp = '<a onclick="javascript:void(0)"><img src="{{sectionImage}}" /><b>{{sectionName}}</b></a>', o = section[ k ];
+		return tmp.replace(/{{sectionImage}}/g, o['info']['poster'] ).replace(/{{sectionName}}/g, o['info']['title'] );
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SELECTION
 
@@ -929,7 +930,7 @@ function playselection( str, _t ){
 	selection.subtract( str );
 	var _this = $( _t ), rel = _this.attr('rel');
 	if( rel != undefined && rel != null && rel != '' )
-		timelineObj.loadSection( 'running' );	
+		timelineObj.loadSection( rel );	
 }
 
 function getTemplates( array ){
