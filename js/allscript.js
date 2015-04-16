@@ -152,7 +152,7 @@ createjs.Graphics.prototype.setStrokeDash = function( segments, offset ){
 			callbackDetect( {'type': 'complete', 'value': e['target'] } );
 			if( preload != null ){
 				preload.close();
-				preload = null;
+				preload = undefined;
 			}
 		}
 		
@@ -189,11 +189,7 @@ function convertToArr( o ){
 		
 		var con = new createjs.Container(), pathData = convertToArr( o['path']['d'] ), points = MATH.getCurvePoints( pathData, .5 ), ln, lnMsk = new createjs.Shape(), le = points.length - 1, dir = o['direction'] || 'bottom', rate, cPoint = o['controlPoint'] || .9, rtn = o['return'], content = $('#content'), scPoint = null;
 			
-		function init(){
-			
-			// clear
-			if( controller.getNumChildren() > 0 ) controller.removeAllChildren();
-			
+		function init(){			
 			//
 			resetRate();
 			
@@ -476,7 +472,15 @@ function convertToArr( o ){
 		
 		};
 		this.destroy = function(){
-		
+			var el = con.getChildByName('dragBtn');
+			if( el ) 
+				el.removeAllEventListeners();
+			
+			if( controller.getNumChildren() > 0 ) 
+				controller.removeAllChildren();
+			
+			// reset variable http://jsperf.com/delete-vs-undefined-vs-null/3
+			con = pathData = points = ln = lnMsk = le = dir = rate = cPoint = rtn = content = scPoint = undefined;
 		};
 	};
 	
@@ -583,7 +587,8 @@ function convertToArr( o ){
 		
 		};
 		this.destroy = function(){
-		
+			if( Cntrl ) Cntrl.destroy();
+			con = _loadItemsById = _loadedResults = maxCount = Cntrl = undefined;
 		};
 	};
 	
@@ -601,7 +606,6 @@ function convertToArr( o ){
 		var el = obj['el'], videoFrame, frmRate = 30, preview = true;
 		
 		function init(){
-			
 			//console.log( videoType );
 			el.get( 0 ).pause();
 			el.removeAttr('src poster').attr('src', obj['video']['source']['mp4']).attr('poster', obj['video']['poster']);
@@ -611,8 +615,8 @@ function convertToArr( o ){
 			videoFrame.listen('frame');
 			videoFrame.seekTo( { frame: 730 } );	
 			
-			el[ 0 ].addEventListener('loadedmetadata', function(e){ callbackDetect({ 'type': 'loaded', 'value': Math.floor( el[ 0 ].duration.toFixed( 5 ) * frmRate ) }); });
-			el.bind('click', function(){
+			el[ 0 ].addEventListener('loadedmetadata', onLoadedmetadata);
+			el.unbind('click').bind('click', function(){
 				if( preview ){
 					preview = false;
 					el[ 0 ].pause();
@@ -621,6 +625,11 @@ function convertToArr( o ){
 					el[ 0 ].play();
 				} 
 			});
+		}
+		
+		function onLoadedmetadata( e ){
+			callbackDetect({ 'type': 'loaded', 'value': Math.floor( el[ 0 ].duration.toFixed( 5 ) * frmRate ) });
+			el[ 0 ].removeEventListener('loadedmetadata', onLoadedmetadata, false);
 		}
 		
 		function callbackDetect( k ){
@@ -640,6 +649,10 @@ function convertToArr( o ){
 		this.seekto = function( k ){
 			videoFrame.seekTo( { frame: k } );
 		};
+		this.destroy = function( ){
+			videoFrame.stopListen();
+			videoFrame = frmRate = preview = undefined;
+		};
 	};
 	
 	window.Video = Video;
@@ -652,7 +665,7 @@ function convertToArr( o ){
 	
 	function Section( obj, callback ){
 		
-		var scrup = obj['scrup'], loop, video, pointers = $('#pointers > a'), totalFrame = 0, cPoint = obj['main']['controlPoint'], preview = true;
+		var scrups, scrup = obj['scrup'] || null, loop, video, pointers = $('#pointers > a'), totalFrame = 0, slc = obj['selections'] || null, mn = obj['main'] || null, cPoint = mn != null ? mn['controlPoint'] : null, preview = true;
 			
 		function init(){
 			
@@ -660,27 +673,31 @@ function convertToArr( o ){
 			wrapper.removeClass( pages ).addClass( obj['customClass'] );
 			
 			// selections
-			loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': obj['selections'] });
-			selection.generate(function( array ){
-				if( array.length > 1 ){	
-					$('.selections .content').html( getTemplates( array ) + ( obj['selections']['content'] || '' ) );	
-				}else{
-					// nothing
-				}
-			});
+			if( slc ){
+				loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': slc });
+				selection.generate(function( array ){
+					if( array.length > 1 ){	
+						$('.selections .content').html( getTemplates( array ) + ( slc['content'] || '' ) );	
+					}else{
+						// nothing
+					}
+				});
+			}
 			
 			// Main Video
-			video = new Video({ 'id': 'mainVideo', 'el': $('#mainVideo'), 'video': obj['main'] }, function( k ){
-				if( k['type'] == 'frame' ) progress( k['value'] );
-				else if( k['type'] == 'loaded' ){
-					totalFrame = k['value'];
-					video.play();
-				}
-			});
+			if( mn ){
+				video = new Video({ 'id': 'mainVideo', 'el': $('#mainVideo'), 'video': mn }, function( k ){
+					if( k['type'] == 'frame' ) progress( k['value'] );
+					else if( k['type'] == 'loaded' ){
+						totalFrame = k['value'];
+						if( video ) video.play();
+					}
+				});
+			}
 			
 			// Scrup
 			if( scrup ){
-				new Scrup(scrup, function( k ){
+				scrups = new Scrup(scrup, function( k ){
 					var rate = k['rate'], dir = scrup['controller']['direction'], k = 0;
 					if( dir == 'top' || dir == 'left' ) k = 1;
 					if( rate == k ){
@@ -769,7 +786,10 @@ function convertToArr( o ){
 		
 		};
 		this.destroy = function(){
-		
+			if( loop ) loop.destroy();
+			if( video ) video.destroy();
+			if( scrups ) scrups.destroy();
+			mn = slc = scrups = scrup = loop = video = pointers = totalFrame = cPoint = preview = undefined;
 		};
 	};
 	
@@ -790,21 +810,21 @@ function convertToArr( o ){
 			initTemplate();
 	
 			// Start
-			/*current = new Section( section['start'], function( k ){
+			current = new Section( section['start'], function( k ){
 				if( k['type'] == 'controlPoint' ) console.log( k['value']);
 			});
 			$('#startPage .bell').bind('click', function(){
 				wrapper.removeClass('startingPage');
 				current.continu();
 			});
-			*/
 			
-			wrapper.removeClass('startingPage');
-			new Section( section['running'], function( k ){
+			
+			/*wrapper.removeClass('startingPage');
+			current = new Section( section['running'], function( k ){
 				if( k['type'] == 'progress' )
 					progressBar( k['value'] );
 			});
-			
+			*/
 		}
 		
 		
@@ -821,19 +841,29 @@ function convertToArr( o ){
 		
 		function clear(){
 			wrapper.removeClass('scrup selectionPage');
+			if( current ) current.destroy();
 		}
 		
 		init();
 					
 		// PUBLIC FUNC.
 		this.loadSection = function( k ){
+			console.log(k);
 			if( section[ k ] ){
-				active++;
-				clear();
+				
+				if( sections[ k ] ){
+					active = sections[ k ];
+				}else{
+					sections[ k ] = active;
+					active++;
+				}
+	
+				clear();			
 				current = new Section( section[ k ], function( o ){
 					if( o['type'] == 'progress' )
 						progressBar( o['value'] );
 				});
+				
 			}
 		}
 		
@@ -895,15 +925,17 @@ var selection = {
 	}
 }
 
-function playselection( str ){
+function playselection( str, _t ){
 	selection.subtract( str );
-	timelineObj.loadSection('running');	
+	var _this = $( _t ), rel = _this.attr('rel');
+	if( rel != undefined && rel != null && rel != '' )
+		timelineObj.loadSection( 'running' );	
 }
 
 function getTemplates( array ){
 	var html = '<ul class="selectionList">';
 	for( var i = 0; i < array.length; ++i )	
-		html += '<li><a class="select" href="javascript:playselection('+"'"+ array[ i ].type +"|"+ array[ i ].id + "'"+')">'+ array[ i ].name +'</a></li>';
+		html += '<li><a class="select" rel="'+ array[ i ].name +'" href="javascript:void(0);" onclick="playselection('+"'"+ array[ i ].type +"|"+ array[ i ].id + "'"+', this);">'+ array[ i ].name +'</a></li>';
 		html += '</ul>';
 	return html;
 }

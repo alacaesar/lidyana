@@ -10,7 +10,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 0, 'end': 3 } 
+			'controlPoint': { 'begin': 0, 'end': 2490 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -66,7 +66,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2450 } 
+			'controlPoint': { 'begin': 760, 'end': 2490 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
