@@ -2,7 +2,8 @@
 var section = {
 	
 	'start': {
-		'customClass': 'startPage',		
+		'customClass': 'startPage',	
+		'info': { 'id': 'start', 'title': 'START' }, 	
 		'main': { 
 			'poster': 'demo-video/sequence/demo-00000.jpg', 
 			'source':{
@@ -10,7 +11,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 0, 'end': 2490 } 
+			'controlPoint': { 'begin': 0, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -26,7 +27,7 @@ var section = {
 	
 	'boxing': {
 		'customClass': 'boxingPage',	
-		'info': { 'title': 'BOXING', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
+		'info': { 'id': 'boxing', 'title': 'BOXING', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -38,7 +39,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -95,7 +96,7 @@ var section = {
 	
 	'burpee': {
 		'customClass': 'burpeePage',	
-		'info': { 'title': 'BURPEE', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
+		'info': { 'id': 'burpee', 'title': 'BURPEE', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -107,7 +108,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -164,7 +165,7 @@ var section = {
 	
 	'yoga': {
 		'customClass': 'yogaPage',
-		'info': { 'title': 'YOGA', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
+		'info': { 'id': 'yoga', 'title': 'YOGA', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -176,7 +177,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -233,7 +234,7 @@ var section = {
 	
 	'dancing': {
 		'customClass': 'dancingPage',
-		'info': { 'title': 'DANCING', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] },  
+		'info': { 'id': 'dancing', 'title': 'DANCING', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] },  
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -245,7 +246,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -302,7 +303,7 @@ var section = {
 	
 	'coffee': {
 		'customClass': 'coffeePage',
-		'info': { 'title': 'COFFEE', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
+		'info': { 'id': 'coffee', 'title': 'COFFEE', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -314,7 +315,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -371,7 +372,7 @@ var section = {
 	
 	'music': {
 		'customClass': 'musicPage',
-		'info': { 'title': 'MUSIC', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
+		'info': { 'id': 'music', 'title': 'MUSIC', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -383,7 +384,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -440,7 +441,7 @@ var section = {
 	
 	'juice': {
 		'customClass': 'juicePage',
-		'info': { 'title': 'JUICE', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
+		'info': { 'id': 'juice', 'title': 'JUICE', 'poster': 'content/section.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -452,7 +453,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',
@@ -509,7 +510,7 @@ var section = {
 	
 	'running': {
 		'customClass': 'runningPage',
-		'info': { 'title': 'RUNNING', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
+		'info': { 'id': 'running', 'title': 'RUNNING', 'poster': 'content/section2.jpg', 'sloganID':[ 1, 5, 9 ] }, 
 		'cue-point': {
 			'pointers': [],
 			'data':{}	
@@ -521,7 +522,7 @@ var section = {
 				'webm': 'demo-video/video.webm',
 				'ogg': 'demo-video/video.ogg',
 			},
-			'controlPoint': { 'begin': 760, 'end': 2490 } 
+			'controlPoint': { 'begin': 760, 'end': 2600 } 
 		},
 		'selections':{ 
 			'poster': 'demo-video/sequence/demo-00121.jpg',

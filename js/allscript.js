@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////  GLOBAL VARIABLE 
 
-var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType(), pages = getPages(), timelineObj = null, lastSelections = null;
+var win = $(window), doc = $(document), wt = parseFloat( win.width() ),  ht = parseFloat( win.height() ), wst = parseFloat( win.scrollTop() ), sRatio = 0, scene, controller, container, bdy = $('body'), wrapper = $('.wrapper'), preloading = $('.preloading'), timeline = $('.timeline'), imgW = 640, imgH = 360, canvas = $('#Canvas'), update = true, SCALEX = 1, SCALEY = 1, videoType = checkVideoType(), pages = getPages(), timelineObj = null, lastSelections = null, previousSelections = null;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// CANVAS SETTING
 
@@ -667,33 +667,23 @@ function convertToArr( o ){
 		var scrups, scrup = obj['scrup'] || null, loop = null, video = null, pointers = $('#pointers > a'), totalFrame = 0, slc = obj['selections'] || null, mn = obj['main'] || null, cPoint = mn != null ? mn['controlPoint'] : null, preview = true, state = { 'scrup': true, 'selections': true };
 			
 		function init(){
-			
+			console.log(obj['info']['title']);
 			// pageType
 			wrapper.removeClass( pages ).addClass( obj['customClass'] );
-			
-			// selections
-			if( slc && obj['watched'] == undefined ){
-				loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': slc });
-				selection.generate(function( array ){
-					if( array.length > 1 ){	
-						$('.selections .content').html( getTemplates( array ) + ( slc['content'] || '' ) );	
-					}else{
-						// nothing
-						console.log('sonn......', array.name);
-						obj['watched'] = true;
-						lastSelections = array.name;
-						/*timelineObj.loadSection( array.name );*/
-					}
-				});
-			}
 			
 			// Main Video
 			if( mn ){
 				video = new Video({ 'id': 'mainVideo', 'el': $('#mainVideo'), 'video': mn }, function( k ){
 					if( k['type'] == 'frame' ) progress( k['value'] ); 
 					else if( k['type'] == 'loaded' ){
+						
+						// selections
+						loadSelections();
+						
+						//
 						totalFrame = k['value'];
 						callbackDetect( { 'type': 'loaded', 'value': totalFrame } );
+						
 					}
 				});
 			}
@@ -709,6 +699,26 @@ function convertToArr( o ){
 					}
 				});	
 			}
+		}
+		
+		function loadSelections(){
+			
+			if( slc && obj['watched'] == undefined ){
+				loop = new Video({ 'id': 'loopVideo', 'el': $('#loopVideo'), 'video': slc });
+				selection.generate(function( array ){
+					if( array.length > 1 ){	
+						$('.selections .content').html( getTemplates( array ) + ( slc['content'] || '' ) );	
+					}else{
+						// last Selections
+						lastSelections = array.name;
+						previousSelections = obj['info']['id'];
+						obj['watched'] = true;
+						section[ lastSelections ]['watched'] = true;
+						console.log('sonn......', array.name);
+					}
+				});
+			}
+			
 		}
 		
 		function progress( currentFrame ){
@@ -735,8 +745,15 @@ function convertToArr( o ){
 			if(  k >= totalFrame - 2 && k <= totalFrame + 2 && state['selections'] ){
 				state['selections'] = false;
 				
+				//
+				if( obj['lastElement'] ){
+					console.log('FINAL PAGE..........');
+					wrapper.removeClass('scrup selectionPage').addClass('finalPage');
+					return false;
+				}
+				
 				// son eleman kontrol
-				if( lastSelections != null ){
+				if( lastSelections != null && previousSelections == obj['info']['id'] ){
 					timelineObj.loadSection( lastSelections );
 					return false;
 				}
@@ -833,7 +850,7 @@ function convertToArr( o ){
 	
 			// Starting Page
 			current = new Section( section['start'], function( k ){
-				if( k['type'] == 'controlPoint' ) console.log( k['value']);
+				//if( k['type'] == 'controlPoint' ) console.log( k['value']);
 			});
 			$('#startPage .bell').bind('click', function(){
 				wrapper.removeClass('startingPage');
@@ -877,7 +894,12 @@ function convertToArr( o ){
 					$('ul li:eq('+ active +')', timeline).addClass('watched').append( getTimelineTemplates( k ) );
 				}
 				
-				console.log( sections );
+				// son eleman kontrol
+				if( sections[ lastSelections ] ){
+					if( active == sections[ lastSelections ] )
+						section[ k ]['lastElement'] = true;
+				}
+				
 				
 				//selection control
 				var el = $('ul li:eq('+ active +')', timeline).next();
@@ -886,7 +908,8 @@ function convertToArr( o ){
 				}
 				
 				//
-				clear();			
+				clear();	
+				console.log( active );		
 				current = new Section( section[ k ], function( o ){
 					if( o['type'] == 'loaded' ) current.play();
 					else if( o['type'] == 'progress' ) progressBar( o['value'] );

@@ -9,7 +9,6 @@ body, html{ width:100%; height:100%; overflow:hidden; background:#000; }
 .wrapper .hidden{ display:none; }
 
 /* SETUP */
-
 .wrapper{ width:100%; height:100%; position:relative; }
 .wrapper .scene{ width:100%; height:100%; }
 .wrapper .scene #Canvas, .wrapper .scene .hdImage, .wrapper .scene #mainVideo, .wrapper .scene #loopVideo, .wrapper .scene #pointers, .wrapper .scene .scrupWrapper .controller, .wrapper #startPage, .wrapper .selections .content{ position:fixed; top:0; left:0; }
@@ -29,9 +28,11 @@ body, html{ width:100%; height:100%; overflow:hidden; background:#000; }
 .wrapper .scene #loopVideo{ z-index:6; }
 .wrapper .selections .content{ z-index:7; }
 .wrapper #startPage{ z-index:8; }
+.wrapper .sidebar{ z-index:9; display:none; }
+.wrapper .timeline{ z-index:10; }
 
 /* Start Page */
-.wrapper.startingPage .scene, .wrapper.startingPage .timeline, .wrapper.startingPage .sidebar{ display:none; }
+.wrapper.startingPage .scene, .wrapper.startingPage .timeline, .wrapper.startingPage .sidebar, .wrapper.startPage .timeline, .wrapper.startPage .sidebar{ display:none; }
 
 .wrapper.startingPage #startPage{ display:block; }
 .wrapper #startPage{ display:none; }
@@ -40,7 +41,6 @@ body, html{ width:100%; height:100%; overflow:hidden; background:#000; }
 .wrapper #startPage .inside .slogan{ position:absolute; top:50%; left:0; right:0; margin:0 auto; margin-top:-15%; }
 .wrapper #startPage .inside .bell{ position:absolute; left:58%; top:24%; }
 .wrapper #startPage .inside .bell span{ width:84px; height:2px; }
-
 
 /* Scrup */
 .wrapper .scene .scrupWrapper .controller, .wrapper .scene .scrupWrapper #Canvas, .wrapper .scene .scrupWrapper .hdImage{ visibility:hidden; will-change:opacity; opacity:0; pointer-events: none; -webkit-transition:opacity 444ms ease-in-out;-moz-transition:opacity 444ms ease-in-out;-o-transition:opacity 444ms ease-in-out;transition:opacity 444ms ease-in-out;-webkit-transition-timing-function:ease-in-out;-moz-transition-timing-function:ease-in-out;-o-transition-timing-function:ease-in-out;transition-timing-function:ease-in-out; }
