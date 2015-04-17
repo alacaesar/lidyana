@@ -1,9 +1,11 @@
 var prods = [594389, 490483, 436046, 584247];
+    
 
 function getData() {
 	$.ajax({
 		method: "GET",
-		url: "getProduct.json",
+		type: "jsonp",
+		url: "http://dem.lidyana.com/mobile/getProduct?&uuid=1234567890123456789012345678901234567890&cid=1&productId=564372,608550,600928,366077,566448",
 		})
 	.done(function( obj ) {
 		var data = obj.data;
